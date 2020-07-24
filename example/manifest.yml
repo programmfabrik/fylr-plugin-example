@@ -1,0 +1,39 @@
+plugin:
+  name: fylr-example
+  version: 1.0
+  displayname:
+    de-DE: FYLR-Example
+    en-US: FYLR-Example
+  webfrontend:
+    url: custom-data-type-gazetteer.js
+    css: custom-data-type-gazetteer.css
+    logo: image/logo.png
+    l10n: l10n/
+
+callbacks:
+  session_authenticate:
+    exec:
+      service: "node"
+      commands:
+        # - prog: "node"
+        #   stdin: "%_source.url%"
+        #   stdout: "%_target.url%"
+        #   args:
+        #     - type: "value"
+        #       value: "--version"
+
+        # - prog: "node"
+        #   stdin: "%_source.url%"
+        #   stdout: "%_target.url%"
+        #   args:
+        #     - type: "param"
+        #       key: "-e"
+        #       value: "process.stdin.pipe(process.stdout)"
+
+        - prog: "node"
+          stdin: "%_source.url%"
+          stdout: "%_target.url%"
+          args:
+            - type: "value"
+              value: "cat.js"
+
