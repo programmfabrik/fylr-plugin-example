@@ -11,28 +11,39 @@ plugin:
     l10n: l10n/
 
 callbacks:
+  db_pre_update:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdin: "%_input.url%"
+          stdout: "%_output.url%"
+          args:
+            - type: "value"
+              value: "cat.js"
+
   session_authenticate:
     exec:
       service: "node"
       commands:
         # - prog: "node"
-        #   stdin: "%_source.url%"
-        #   stdout: "%_target.url%"
+        #   stdin: "%_input.url%"
+        #   stdout: "%_output.url%"
         #   args:
         #     - type: "value"
         #       value: "--version"
 
         # - prog: "node"
-        #   stdin: "%_source.url%"
-        #   stdout: "%_target.url%"
+        #   stdin: "%_input.url%"
+        #   stdout: "%_output.url%"
         #   args:
         #     - type: "param"
         #       key: "-e"
         #       value: "process.stdin.pipe(process.stdout)"
 
         - prog: "node"
-          stdin: "%_source.url%"
-          stdout: "%_target.url%"
+          stdin: "%_input.url%"
+          stdout: "%_output.url%"
           args:
             - type: "value"
               value: "cat.js"
