@@ -20,7 +20,9 @@ callbacks:
           stdout: "%_output.url%"
           args:
             - type: "value"
-              value: "cat.js"
+              value: "set_comment.js"
+            - type: "value"
+              value: "%info.json%"
 
   session_authenticate:
     exec:
