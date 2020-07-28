@@ -1,6 +1,6 @@
 var info = JSON.parse(process.argv[2]);
 
-if (!(info.query?.comment)) {
+if (!(info.request && info.request.query && info.request.query.comment)) {
     // Output feeback on STDOUT
     console.log(JSON.stringify(
         {
@@ -38,10 +38,13 @@ process.stdin.on('end', () => {
         } else {
             console.error("Adding comment to object", d._uuid, d[d._objecttype]._version)
         }
+        let c = info.request.query.comment
+        // add more info from the config value
+        c = c + info.config.system.plugin_fylr_example_comment.value
         if (d._comment) {
-            d._comment = d._comment+" "+info.query.comment+" #"+i
+            d._comment = d._comment+" "+c+" #"+i
         } else {
-            d._comment = info.query.comment+" #"+i
+            d._comment = c+" #"+i
         }
         // remove the _current
         delete(d._current)

@@ -1,13 +1,11 @@
 plugin:
-  name: fylr-example
+  name: fylr_example
   version: 1.0
+  l10n: l10n/example-loca.csv
   displayname:
     de-DE: FYLR-Example
     en-US: FYLR-Example
   webfrontend:
-    url: custom-data-type-gazetteer.js
-    css: custom-data-type-gazetteer.css
-    logo: image/logo.png
     l10n: l10n/
 
 callbacks:
@@ -50,3 +48,9 @@ callbacks:
             - type: "value"
               value: "cat.js"
 
+base_config:
+  - name: comment
+    parameters:
+      value:
+        type: text
+        position: 0
