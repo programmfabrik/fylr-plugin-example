@@ -8,6 +8,30 @@ plugin:
   webfrontend:
     l10n: l10n/
 
+extensions:
+  dump/empty:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdin: "%_input.url%"
+          stdout: "%_output.url%"
+          args:
+            - type: "value"
+              value: "empty.js"
+  dump/info:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdin: "%_input.url%"
+          stdout: "%_output.url%"
+          args:
+            - type: "value"
+              value: "dump_info.js"
+            - type: "value"
+              value: "%info.json%"
+
 callbacks:
   db_pre_update:
     exec:
