@@ -5,8 +5,6 @@ plugin:
   displayname:
     de-DE: FYLR-Example
     en-US: FYLR-Example
-  webfrontend:
-    l10n: l10n/
 
 extensions:
   dump/empty:
