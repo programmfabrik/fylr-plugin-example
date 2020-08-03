@@ -13,6 +13,7 @@ if (comment == undefined) {
     process.exit(1);
 }
 
+
 let input = '';
 process.stdin.on('data', d => {
     try {
@@ -32,6 +33,11 @@ process.stdin.on('end', () => {
         process.exit(1);
     }
 
+    // add more info from the config value
+    if (info.config.system.plugin_fylr_example_comment.value) {
+        comment = comment + " " + info.config.system.plugin_fylr_example_comment.value
+    }
+
     data.forEach((d, i) => {
         if (d[d._objecttype]._version === 1) {
             return
@@ -40,10 +46,6 @@ process.stdin.on('end', () => {
             console.error("Adding comment to object", d._uuid, d[d._objecttype]._version, d._current[d._objecttype]._version)
         } else {
             console.error("Adding comment to object", d._uuid, d[d._objecttype]._version)
-        }
-        // add more info from the config value
-        if (info.config.system.plugin_fylr_example_comment.value) {
-            comment = comment + " " + info.config.system.plugin_fylr_example_comment.value
         }
         if (d._comment) {
             d._comment = d._comment+" "+comment+" #"+i
