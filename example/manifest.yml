@@ -2,9 +2,13 @@ plugin:
   name: fylr_example
   version: 1.0
   l10n: l10n/example-loca.csv
+  webfrontend:
+    url: main.js
   displayname:
     de-DE: FYLR-Example
     en-US: FYLR-Example
+
+base_url_prefix: "webfrontend"
 
 extensions:
   dump/empty:
@@ -31,6 +35,21 @@ extensions:
               value: "%info.json%"
 
 callbacks:
+
+  transition_db_pre_update/set_comment:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdin: "%_input.url%"
+          stdout: "%_output.url%"
+          args:
+            - type: "value"
+              value: "set_comment.js"
+            - type: "value"
+              value: "%info.json%"
+
+
   db_pre_update:
     exec:
       service: "node"
