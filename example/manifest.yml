@@ -46,8 +46,6 @@ callbacks:
           args:
             - type: "value"
               value: "set_comment.js"
-            - type: "value"
-              value: "%info.json%"
 
 
   db_pre_update:
@@ -60,8 +58,6 @@ callbacks:
           args:
             - type: "value"
               value: "set_comment.js"
-            - type: "value"
-              value: "%info.json%"
 
   session_authenticate:
     exec:
