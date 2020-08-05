@@ -20,14 +20,14 @@ process.stdin.on('end', () => {
     try {
         fs.writeFileSync(fn, "---------\n");
         fs.appendFileSync(fn, JSON.stringify(info, "", "    "));
-        fs.appendFileSync(fn, "\n---------\n");
+        fs.appendFileSync(fn, "\nSTDIN START>>>\n");
         try {
             // output pretty-fied JSON if possible
             fs.appendFileSync(fn, JSON.stringify(JSON.parse(input),"","    "));
         } catch {
             fs.appendFileSync(fn, input);
         }
-        fs.appendFileSync(fn, "\n---------\n");
+        fs.appendFileSync(fn, "\n<<<STDIN END\n");
     } catch(e) {
         console.error(`Could not parse input string into JSON array: ${e.message}`, e.stack);
         process.exit(1);

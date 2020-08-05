@@ -34,7 +34,6 @@ extensions:
             - type: "value"
               value: "%info.json%"
 
-
   dump/file:
     exec:
       service: "node"
@@ -47,6 +46,18 @@ extensions:
               value: "stdin_to_file.js"
             - type: "value"
               value: "/tmp/record.log"
+            - type: "value"
+              value: "%info.json%"
+  webhook/set_comment:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdin: "%_input.url%"
+          stdout: "%_output.url%"
+          args:
+            - type: "value"
+              value: "set_comment_ext.js"
             - type: "value"
               value: "%info.json%"
 

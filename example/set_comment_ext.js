@@ -1,5 +1,7 @@
 const fs = require('fs');
 
+let info = JSON.parse(process.argv[2])
+
 let input = '';
 process.stdin.on('data', d => {
     try {
@@ -13,33 +15,40 @@ process.stdin.on('data', d => {
 process.stdin.on('end', () => {
     let data;
     try {
-        fs.writeFileSync('/tmp/post-data2', input);
+        fs.writeFileSync('/tmp/post-data3', input);
         data = JSON.parse(input);
-        if (!data.info) {
-            data.info = {}
-        }
     } catch(e) {
         console.error(`Could not parse input: ${e.message}`, e.stack);
         process.exit(1);
     }
 
-    var comment = (data.info.request && data.info.request.query && data.info.request.query.comment) || data.info.comment
+    var comment = (info.request && info.request.query && info.request.query.comment)
+    if (comment == undefined) {
+        comment = "comment missing"
+    }
+
     if (comment == undefined) {
         // console.error(JSON.stringify(info,"","    "))
         // Output feeback on STDOUT
         // Send back empty list, indicating that nothing was changed by us
-        console.log(JSON.stringify({"objects": []}));
+        console.log(
+            JSON.stringify({
+                status_code: 200,
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: {
+                    "request": data.info.request,
+                    "objects": []
+                }
+            })
+        )
         process.exit(0);
         return
     }
 
-    console.log(input)
-
     // add more info from the config value
     try {
-        if (data.info.config.system.plugin_fylr_example_comment.value) {
-            comment = comment + " " + data.info.config.system.plugin_fylr_example_comment.value
-        }
 
         data.objects.forEach((d, i) => {
             if (d[d._objecttype]._version === 1) {
@@ -60,8 +69,20 @@ process.stdin.on('end', () => {
         });
         var myArgs = process.argv.slice(0);
         console.error('myArgs: ', myArgs);
-        console.log(JSON.stringify(data));
-    } catch {
+        console.log(
+            JSON.stringify({
+                status_code: 200,
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: {
+                    "objects": data.objects
+                }
+            })
+        );
+    } catch (ex) {
+        console.error(ex)
+        process.exit(1)
     }
 });
 
