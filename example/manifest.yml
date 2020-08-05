@@ -34,8 +34,23 @@ extensions:
             - type: "value"
               value: "%info.json%"
 
-callbacks:
 
+  dump/file:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdin: "%_input.url%"
+          stdout: "%_output.url%"
+          args:
+            - type: "value"
+              value: "stdin_to_file.js"
+            - type: "value"
+              value: "/tmp/record.log"
+            - type: "value"
+              value: "%info.json%"
+
+callbacks:
   transition_db_pre_update/set_comment:
     exec:
       service: "node"
@@ -46,7 +61,6 @@ callbacks:
           args:
             - type: "value"
               value: "set_comment.js"
-
 
   db_pre_update:
     exec:

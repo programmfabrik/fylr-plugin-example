@@ -16,7 +16,7 @@ process.stdin.on('end', () => {
         fs.writeFileSync('/tmp/post-data', input);
         data = JSON.parse(input);
     } catch(e) {
-        console.error(`Could not parse input string into JSON array: ${e.message}`, e.stack);
+        console.error(`Could not parse input: ${e.message}`, e.stack);
         process.exit(1);
     }
 
