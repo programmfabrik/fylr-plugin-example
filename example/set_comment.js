@@ -33,8 +33,6 @@ process.stdin.on('end', () => {
         return
     }
 
-    console.log(input)
-
     // add more info from the config value
     try {
         if (data.info.config.system.plugin_fylr_example_comment.value) {
