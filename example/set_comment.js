@@ -39,10 +39,9 @@ process.stdin.on('end', () => {
             comment = comment + " " + data.info.config.system.plugin_fylr_example_comment.value
         }
 
+        console.error(JSON.stringify(data.objects,"","    "));
+
         data.objects.forEach((d, i) => {
-            if (d[d._objecttype]._version === 1) {
-                return
-            }
             if (d._current) {
                 console.error("Adding comment to object", d._uuid, d[d._objecttype]._version, d._current[d._objecttype]._version)
             } else {
@@ -55,9 +54,10 @@ process.stdin.on('end', () => {
             }
             // remove the _current
             delete(d._current)
+            delete(d._path)
         });
         var myArgs = process.argv.slice(0);
-        console.error('myArgs: ', myArgs);
+        delete(data.info)
         console.log(JSON.stringify(data));
     } catch {
     }

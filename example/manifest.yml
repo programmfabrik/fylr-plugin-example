@@ -62,7 +62,7 @@ extensions:
               value: "%info.json%"
 
 callbacks:
-  transition_db_pre_update/set_comment:
+  transition_db_pre_save/set_comment:
     exec:
       service: "node"
       commands:
@@ -73,7 +73,7 @@ callbacks:
             - type: "value"
               value: "set_comment.js"
 
-  db_pre_update:
+  db_pre_save:
     exec:
       service: "node"
       commands:
