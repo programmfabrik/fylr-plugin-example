@@ -1,5 +1,10 @@
 const fs = require('fs');
 
+let info = undefined
+if (process.argv.length >= 3) {
+    info = JSON.parse(process.argv[2])
+}
+
 let input = '';
 process.stdin.on('data', d => {
     try {
@@ -23,23 +28,32 @@ process.stdin.on('end', () => {
         process.exit(1);
     }
 
-    var comment = (data.info.request && data.info.request.query && data.info.request.query.comment) || data.info.comment
+    var comment = undefined
+    if (info) {
+        // Set from the command line for the extension plugin (webhook)
+        comment = (info.request && info.request.query && info.request.query.comment)
+    } else {
+        // Set directly from the request (like transition/db_pre_save)
+        comment = (data.info.request && data.info.request.query && data.info.request.query.comment) || data.info.comment
+    }
+
     if (comment == undefined) {
         // console.error(JSON.stringify(info,"","    "))
         // Output feeback on STDOUT
         // Send back empty list, indicating that nothing was changed by us
         console.log(JSON.stringify({"objects": []}));
+        console.error("No changes");
         process.exit(0);
         return
     }
 
     // add more info from the config value
     try {
-        if (data.info.config.system.plugin_fylr_example_comment.value) {
+        if (data.info && data.info.config && data.info.config.system && data.info.config.system.plugin_fylr_example_comment.value) {
             comment = comment + " " + data.info.config.system.plugin_fylr_example_comment.value
         }
 
-        console.error(JSON.stringify(data.objects,"","    "));
+        // console.error(JSON.stringify(data.objects,"","    "));
 
         data.objects.forEach((d, i) => {
             if (d._current) {
@@ -59,7 +73,8 @@ process.stdin.on('end', () => {
         var myArgs = process.argv.slice(0);
         delete(data.info)
         console.log(JSON.stringify(data));
-    } catch {
+    } catch (ex) {
+        console.error(ex)
     }
 });
 

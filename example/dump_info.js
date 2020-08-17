@@ -1,4 +1,7 @@
-let body = JSON.parse(process.argv[2])
+let body = {}
+if (process.argv.length >= 3) {
+    body = JSON.parse(process.argv[2])
+}
 let input = '';
 
 process.stdin.on('data', d => {
@@ -13,19 +16,14 @@ process.stdin.on('data', d => {
 process.stdin.on('end', () => {
     body.body = input
     if (input.length > 0) {
-        body.body_json_parsed = JSON.parse(input)
+        try {
+            body.body_json_parsed = JSON.parse(input)
+        } catch(e) {
+            console.error(`Could not parse body: ${e.message}`, e.stack)
+            body.body_json_parsed = e.message
+        }
     } else {
         body.body_json_parsed = null
     }
-
-    console.log(
-        JSON.stringify({
-            status_code: 200,
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: body
-        })
-    );
+    console.log(JSON.stringify(body));
 })
-

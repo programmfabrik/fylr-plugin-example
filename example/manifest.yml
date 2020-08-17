@@ -16,21 +16,46 @@ extensions:
       service: "node"
       commands:
         - prog: "node"
-          stdin: "%_input.url%"
-          stdout: "%_output.url%"
+          stdin:
+            url: "%_input.url%"
+          stdout:
+            method: "POST"
+            url: "%_output.url%"
           args:
             - type: "value"
               value: "empty.js"
+
   dump/info:
     exec:
       service: "node"
       commands:
         - prog: "node"
-          stdin: "%_input.url%"
-          stdout: "%_output.url%"
+          stdin:
+            url: "%_input.url%"
+          stdout:
+            url: "%_output.url%"
+            method: "POST"
+            # output_content_length: true
           args:
             - type: "value"
               value: "dump_info.js"
+            - type: "value"
+              value: "%info.json%"
+
+  dump/error:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdin:
+            url: "%_input.url%"
+          stdout:
+            url: "%_output.url%"
+            method: "POST"
+            # output_content_length: true
+          args:
+            - type: "value"
+              value: "error_400.js"
             - type: "value"
               value: "%info.json%"
 
@@ -39,8 +64,10 @@ extensions:
       service: "node"
       commands:
         - prog: "node"
-          stdin: "%_input.url%"
-          stdout: "%_output.url%"
+          stdin:
+            url: "%_input.url%"
+          stdout:
+            url: "%_output.url%"
           args:
             - type: "value"
               value: "stdin_to_file.js"
@@ -48,16 +75,19 @@ extensions:
               value: "/tmp/record.log"
             - type: "value"
               value: "%info.json%"
+
   webhook/set_comment:
     exec:
       service: "node"
       commands:
         - prog: "node"
-          stdin: "%_input.url%"
-          stdout: "%_output.url%"
+          stdin:
+            url: "%_input.url%"
+          stdout:
+            url: "%_output.url%"
           args:
             - type: "value"
-              value: "set_comment_ext.js"
+              value: "set_comment.js"
             - type: "value"
               value: "%info.json%"
 
@@ -67,8 +97,10 @@ callbacks:
       service: "node"
       commands:
         - prog: "node"
-          stdin: "%_input.url%"
-          stdout: "%_output.url%"
+          stdin:
+            url: "%_input.url%"
+          stdout:
+            url: "%_output.url%"
           args:
             - type: "value"
               value: "set_comment.js"
@@ -78,8 +110,10 @@ callbacks:
       service: "node"
       commands:
         - prog: "node"
-          stdin: "%_input.url%"
-          stdout: "%_output.url%"
+          stdin:
+            url: "%_input.url%"
+          stdout:
+            url: "%_output.url%"
           args:
             - type: "value"
               value: "set_comment.js"
@@ -104,8 +138,10 @@ callbacks:
         #       value: "process.stdin.pipe(process.stdout)"
 
         - prog: "node"
-          stdin: "%_input.url%"
-          stdout: "%_output.url%"
+          stdin:
+            url: "%_input.url%"
+          stdout:
+            url: "%_output.url%"
           args:
             - type: "value"
               value: "cat.js"
