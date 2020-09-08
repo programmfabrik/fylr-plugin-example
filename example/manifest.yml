@@ -17,10 +17,9 @@ extensions:
       commands:
         - prog: "node"
           stdin:
-            url: "%_input.url%"
+            type: "body"
           stdout:
-            method: "POST"
-            url: "%_output.url%"
+            type: "body"
           args:
             - type: "value"
               value: "empty.js"
@@ -31,11 +30,9 @@ extensions:
       commands:
         - prog: "node"
           stdin:
-            url: "%_input.url%"
+            type: "body"
           stdout:
-            url: "%_output.url%"
-            method: "POST"
-            # output_content_length: true
+            type: "body"
           args:
             - type: "value"
               value: "dump_info.js"
@@ -48,16 +45,12 @@ extensions:
       commands:
         - prog: "node"
           stdin:
-            url: "%_input.url%"
+            type: "body"
           stdout:
-            url: "%_output.url%"
-            method: "POST"
-            # output_content_length: true
+            type: "body"
           args:
             - type: "value"
               value: "error_400.js"
-            - type: "value"
-              value: "%info.json%"
 
   dump/file:
     exec:
@@ -65,9 +58,9 @@ extensions:
       commands:
         - prog: "node"
           stdin:
-            url: "%_input.url%"
+            type: "body"
           stdout:
-            url: "%_output.url%"
+            type: "body"
           args:
             - type: "value"
               value: "stdin_to_file.js"
@@ -82,9 +75,9 @@ extensions:
       commands:
         - prog: "node"
           stdin:
-            url: "%_input.url%"
+            type: "body"
           stdout:
-            url: "%_output.url%"
+            type: "body"
           args:
             - type: "value"
               value: "set_comment.js"
@@ -122,26 +115,11 @@ callbacks:
     exec:
       service: "node"
       commands:
-        # - prog: "node"
-        #   stdin: "%_input.url%"
-        #   stdout: "%_output.url%"
-        #   args:
-        #     - type: "value"
-        #       value: "--version"
-
-        # - prog: "node"
-        #   stdin: "%_input.url%"
-        #   stdout: "%_output.url%"
-        #   args:
-        #     - type: "param"
-        #       key: "-e"
-        #       value: "process.stdin.pipe(process.stdout)"
-
         - prog: "node"
           stdin:
-            url: "%_input.url%"
+            type: body
           stdout:
-            url: "%_output.url%"
+            type: body
           args:
             - type: "value"
               value: "cat.js"
