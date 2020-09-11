@@ -91,9 +91,9 @@ callbacks:
       commands:
         - prog: "node"
           stdin:
-            url: "%_input.url%"
+            type: body
           stdout:
-            url: "%_output.url%"
+            type: body
           args:
             - type: "value"
               value: "set_comment.js"
@@ -104,9 +104,9 @@ callbacks:
       commands:
         - prog: "node"
           stdin:
-            url: "%_input.url%"
+            type: body
           stdout:
-            url: "%_output.url%"
+            type: body
           args:
             - type: "value"
               value: "set_comment.js"
