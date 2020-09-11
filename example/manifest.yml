@@ -111,7 +111,7 @@ callbacks:
             - type: "value"
               value: "set_comment.js"
 
-  session_authenticate:
+  DISABLED-session_authenticate:
     exec:
       service: "node"
       commands:
