@@ -44,7 +44,7 @@ jobs:
           PRIVATE_DOCKER_REGISTRY_PASSWORD: ${{ secrets.PRIVATE_DOCKER_REGISTRY_PASSWORD }}
         run: |
           docker login $PRIVATE_DOCKER_REGISTRY_ADDRESS -u $PRIVATE_DOCKER_REGISTRY_USERNAME -p "$PRIVATE_DOCKER_REGISTRY_PASSWORD"
-          docker build -t $PRIVATE_DOCKER_REGISTRY_ADDRESS/fylr/fylr-plugins:master --label "$GITHUB_COMMIT_SHA" -f docker/fylr/Dockerfile .
+          docker build -t $PRIVATE_DOCKER_REGISTRY_ADDRESS/fylr/fylr-plugins:master --label "$GITHUB_COMMIT_SHA" -f Dockerfile .
 
       - name: push the container
         shell: bash
