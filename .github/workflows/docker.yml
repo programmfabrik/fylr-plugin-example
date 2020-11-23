@@ -2,9 +2,9 @@ name: CD
 
 on:
   push:
-    branches: [ master, docker-container-build ]
+    branches: [ master, develop, docker-container-build ]
   pull_request:
-    branches: [ master, docker-container-build ]
+    branches: [ master, develop, docker-container-build ]
 
 jobs:
   container-fylr:
