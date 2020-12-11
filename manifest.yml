@@ -1,0 +1,154 @@
+plugin:
+  name: fylr_example
+  version: 1.0
+  l10n: l10n/example-loca.csv
+  webfrontend:
+    url: main.js
+  displayname:
+    de-DE: FYLR-Example
+    en-US: FYLR-Example
+
+base_url_prefix: "webfrontend"
+
+extensions:
+  dump/empty:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdin:
+            url: "%_input.url%"
+          stdout:
+            method: "POST"
+            url: "%_output.url%"
+          args:
+            - type: "value"
+              value: "empty.js"
+
+  dump/info:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdin:
+            url: "%_input.url%"
+          stdout:
+            url: "%_output.url%"
+            method: "POST"
+            # output_content_length: true
+          args:
+            - type: "value"
+              value: "dump_info.js"
+            - type: "value"
+              value: "%info.json%"
+
+  dump/error:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdin:
+            url: "%_input.url%"
+          stdout:
+            url: "%_output.url%"
+            method: "POST"
+            # output_content_length: true
+          args:
+            - type: "value"
+              value: "error_400.js"
+            - type: "value"
+              value: "%info.json%"
+
+  dump/file:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdin:
+            url: "%_input.url%"
+          stdout:
+            url: "%_output.url%"
+          args:
+            - type: "value"
+              value: "stdin_to_file.js"
+            - type: "value"
+              value: "/tmp/record.log"
+            - type: "value"
+              value: "%info.json%"
+
+  webhook/set_comment:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdin:
+            url: "%_input.url%"
+          stdout:
+            url: "%_output.url%"
+          args:
+            - type: "value"
+              value: "set_comment.js"
+            - type: "value"
+              value: "%info.json%"
+
+callbacks:
+  transition_db_pre_save/set_comment:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdin:
+            url: "%_input.url%"
+          stdout:
+            url: "%_output.url%"
+          args:
+            - type: "value"
+              value: "set_comment.js"
+
+  db_pre_save:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdin:
+            url: "%_input.url%"
+          stdout:
+            url: "%_output.url%"
+          args:
+            - type: "value"
+              value: "set_comment.js"
+
+  session_authenticate:
+    exec:
+      service: "node"
+      commands:
+        # - prog: "node"
+        #   stdin: "%_input.url%"
+        #   stdout: "%_output.url%"
+        #   args:
+        #     - type: "value"
+        #       value: "--version"
+
+        # - prog: "node"
+        #   stdin: "%_input.url%"
+        #   stdout: "%_output.url%"
+        #   args:
+        #     - type: "param"
+        #       key: "-e"
+        #       value: "process.stdin.pipe(process.stdout)"
+
+        - prog: "node"
+          stdin:
+            url: "%_input.url%"
+          stdout:
+            url: "%_output.url%"
+          args:
+            - type: "value"
+              value: "cat.js"
+
+base_config:
+  - name: comment
+    parameters:
+      value:
+        type: text
+        position: 0
