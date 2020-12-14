@@ -18,7 +18,7 @@ process.stdin.on('data', d => {
 process.stdin.on('end', () => {
     let data;
     try {
-        fs.writeFileSync('/tmp/post-data2', input);
+        fs.writeFileSync('/tmp/post-data', input);
         data = JSON.parse(input);
         if (!data.info) {
             data.info = {}
@@ -34,6 +34,7 @@ process.stdin.on('end', () => {
         comment = (info.request && info.request.query && info.request.query.comment)
     } else {
         // Set directly from the request (like transition/db_pre_save)
+        fs.writeFileSync('/tmp/post-req', JSON.stringify(data.info.request));
         comment = (data.info.request && data.info.request.query && data.info.request.query.comment) || data.info.comment
     }
 

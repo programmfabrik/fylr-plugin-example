@@ -1,6 +1,6 @@
 plugin:
   name: fylr_example
-  version: 1.0
+  version: "2"
   l10n: l10n/example-loca.csv
   webfrontend:
     url: main.js
@@ -23,6 +23,17 @@ extensions:
           args:
             - type: "value"
               value: "empty.js"
+
+  dump/sleep:
+    exec:
+      service: "python3"
+      commands:
+        - prog: "python3"
+          stdout:
+            type: "body"
+          args:
+            - type: "value"
+              value: "sleep.py"
 
   dump/info:
     exec:
@@ -130,3 +141,35 @@ base_config:
       value:
         type: text
         position: 0
+
+system_rights:
+  - name: example_right
+    comment: this right was added by the FYLR example plugin
+    parameters:
+      - name: bool
+        type: bool
+      - name: int
+        type: int
+      - name: text
+        type: text
+      - name: string-list
+        type: string-list
+        choices: [ a, b, c ]
+      - name: string-list-one
+        type: string-list-one
+        choices: [ a, b, c ]
+      - name: string-list-one-or-zero
+        type: string-list-one-or-zero
+        choices: [ a, b, c ]
+      - name: mask-select
+        type: mask-select
+      - name: objecttype-select
+        type: objecttype-select
+      - name: eas-column-select
+        type: eas-column-select
+      - name: pool-select
+        type: pool-select
+      - name: preview-versions
+        type: preview-versions
+
+
