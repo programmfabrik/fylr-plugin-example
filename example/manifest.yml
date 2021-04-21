@@ -105,6 +105,8 @@ callbacks:
             type: body
           args:
             - type: "value"
+              value: "--max-http-header-size=1000000"
+            - type: "value"
               value: "export_demo.js"
             - type: "value"
               value: "%info.json%"
