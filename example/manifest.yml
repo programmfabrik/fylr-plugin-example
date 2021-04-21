@@ -96,6 +96,19 @@ extensions:
               value: "%info.json%"
 
 callbacks:
+  export/demo:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdout:
+            type: body
+          args:
+            - type: "value"
+              value: "export_demo.js"
+            - type: "value"
+              value: "%info.json%"
+
   transition_db_pre_save/set_comment:
     exec:
       service: "node"
