@@ -40,13 +40,14 @@ try {
 }
 
 (async() => {
+
     if (info.plugin_action == "produce?infos.json") {
         for (let i = 0, j = info.export._files.length; i < j; i++) {
             const f = info.export._files[i];
             let url = info.api_callback.url+"/export/"+info.export.export._id+"/file/"+f.path
-            if (f.export_file_internal.hidden && f.export_file_internal.plugin_action !== "produce?infos.json") {
+            if (f.export_file_internal.file_id) {
                 try {
-                    info.export._files[i].md5 = await getMD5FromURL(url);
+                    info.export._files[i].md5 = await getMD5FromURL(url)
                     console.error('MD5: ' + info.export._files[i].md5);
                 } catch (e) {
                     console.error(e);
@@ -85,10 +86,12 @@ try {
         "log": [
             "Add a protocol here",
             "With multiple entries like this"
-        ]
+        ],
     }
+    info.export.export._version++
+    delete(info.export._log)
 
     // write back modified export json
     console.log(JSON.stringify(info.export, "", "    "))
-    
+
 })();
