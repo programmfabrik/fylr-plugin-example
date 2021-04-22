@@ -98,6 +98,7 @@ extensions:
 callbacks:
   export/demo:
     exec:
+      timeoutSec: 30
       service: "node"
       commands:
         - prog: "node"
