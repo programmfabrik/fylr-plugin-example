@@ -6,7 +6,7 @@ const getMD5FromURL = async (url) => {
     const md5sum = crypto.createHash('md5');
     return new Promise(
         (resolve, reject) => {
-            const req = https.request(url, {timeout: 10000},(res) => {
+            const req = https.request(url, {timeout: 20000},(res) => {
                 res.on('end', () => resolve(md5sum.digest('hex')));
                 res.on('error', reject);
                 res.on('data', (d) => md5sum.update(d));
@@ -48,7 +48,7 @@ try {
             if (f.export_file_internal.file_id) {
                 try {
                     info.export._files[i].md5 = await getMD5FromURL(url)
-                    console.error('MD5: ' + info.export._files[i].md5);
+                    console.error('MD5: ' + info.export._files[i].md5, "FILE: ", info.export._files[i].path);
                 } catch (e) {
                     console.error(e);
                 }
