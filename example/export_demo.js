@@ -81,9 +81,14 @@ try {
     })
 
     info.export._state = "done"
-    info.export._plugin_protocol = "Add a protocol here\nWith multilines like\nthis"
+    info.export._plugin_event_info = {
+        "log": [
+            "Add a protocol here",
+            "With multiple entries like this"
+        ]
+    }
 
     // write back modified export json
     console.log(JSON.stringify(info.export, "", "    "))
-
+    
 })();
