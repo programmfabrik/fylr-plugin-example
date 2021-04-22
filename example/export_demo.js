@@ -80,13 +80,8 @@ try {
         }
     })
 
-    // add a new file which our plugin produces / provides
-    info.export.export._version++
-
-    delete(info.export._log)
-
-    // console.error(JSON.stringify(info.export, "", "    "))
-    console.error("files", info.export._files.length, "version", info.export.export._version)
+    info.export._state = "done"
+    info.export._plugin_protocol = "Add a protocol here\nWith multilines like\nthis"
 
     // write back modified export json
     console.log(JSON.stringify(info.export, "", "    "))
