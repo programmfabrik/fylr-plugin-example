@@ -6,7 +6,7 @@ const getMD5FromURL = async (url) => {
     const md5sum = crypto.createHash('md5');
     return new Promise(
         (resolve, reject) => {
-            const req = https.request(url, {timeout: 20000},(res) => {
+            const req = https.request(url, {timeout: 60000},(res) => {
                 res.on('end', () => resolve(md5sum.digest('hex')));
                 res.on('error', reject);
                 res.on('data', (d) => md5sum.update(d));
