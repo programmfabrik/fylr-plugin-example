@@ -96,6 +96,21 @@ extensions:
               value: "%info.json%"
 
 callbacks:
+
+  export_transport/copy_file:
+    exec:
+      timeoutSec: 30
+      service: "node"
+      commands:
+        - prog: "node"
+          stdout:
+            type: body
+          args:
+            - type: "value"
+              value: "export_transport_demo.js"
+            - type: "value"
+              value: "%info.json%"
+
   export/demo:
     exec:
       timeoutSec: 60

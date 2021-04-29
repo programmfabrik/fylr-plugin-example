@@ -34,7 +34,7 @@ process.stdin.on('end', () => {
         comment = (info.request && info.request.query && info.request.query.comment)
     } else {
         // Set directly from the request (like transition/db_pre_save)
-        fs.writeFileSync('/tmp/post-req', JSON.stringify(data.info.request));
+        // fs.writeFileSync('/tmp/post-req', JSON.stringify(data.info.request));
         comment = (data.info.request && data.info.request.query && data.info.request.query.comment) || data.info.comment
     }
 
