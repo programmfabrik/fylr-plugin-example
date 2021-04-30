@@ -18,7 +18,6 @@ by the FYLR server
 const fs = require('fs');
 const http = require('http');
 const https = require('https');
-const { SSL_OP_EPHEMERAL_RSA } = require('node:constants');
 
 if (process.argv.length < 3) {
     console.error(`Wrong number of parameters. Usage: "node export_transport_demo.js <info>"`)
