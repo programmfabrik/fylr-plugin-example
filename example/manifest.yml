@@ -99,7 +99,7 @@ callbacks:
 
   export_transport/copy_file:
     exec:
-      timeoutSec: 30
+      timeoutSec: 60
       service: "node"
       commands:
         - prog: "node"
