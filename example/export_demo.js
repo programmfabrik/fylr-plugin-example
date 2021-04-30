@@ -47,7 +47,7 @@ try {
             let url = info.api_callback.url+"/export/"+info.export.export._id+"/file/"+f.path
             if (f.export_file_internal.file_id) {
                 try {
-                    info.export._files[i].md5 = await getMD5FromURL(url)
+                    info.export._files[i].md5 = await getMD5FromURL(url+"?token="+info.api_callback.token)
                     console.error('MD5: ' + info.export._files[i].md5, "FILE: ", info.export._files[i].path);
                 } catch (e) {
                     console.error(e);
@@ -74,7 +74,7 @@ try {
         "format": "application/json",
         "export_file_internal": {
             "path": "files/infos.json",
-            "format": "application/json",
+            "content_type": "application/json; charset=utf-8",
             "plugin_action": "produce?infos.json",
             "info": {
             }
