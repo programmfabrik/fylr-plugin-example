@@ -2,7 +2,13 @@
 
 This plugin stores the received data in the file
 
-transport.options.target
+transport.options.file
+
+OR
+
+sends the data to the given
+
+transport.options.url
 
 It returns event info which is stored in EXPORT_TRANSPORT_FINISH
 by the FYLR server
@@ -10,8 +16,8 @@ by the FYLR server
 */
 
 const fs = require('fs');
-const https = require('http');
-const crypto = require('crypto');
+const http = require('http');
+const https = require('https');
 
 if (process.argv.length < 3) {
     console.error(`Wrong number of parameters. Usage: "node export_transport_demo.js <info>"`)
@@ -34,14 +40,51 @@ try {
     process.exit(1);
 }
 
-console.error("writing file", info.transport.options.target)
+const tOpts = info.transport.options;
+console.error("writing/sending data as per transport options", tOpts)
+const tLog = [];
 
-fs.writeFileSync(info.transport.options.target, JSON.stringify(info,"","    "));
+const sendDataToURL = async (url, data) => {
+    return new Promise(
+        (resolve, reject) => {
+            const parsedURL = new URL(url);
+            const client = parsedURL.protocol === 'https' ? https : http; 
+            const req = client.request(url, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                timeout: 60000
+            }, (res) => {
+                res.on('end', resolve);
+                //Interesting, apparently we need to consume the data
+                res.on('data', () => {});
+                res.on('error', reject);
+            });
+            req.on('timeout', () => reject(new Error("TIMEOUT")));
+            req.on('error', reject);
+            req.write(data);
+            req.end();
+        }
+    );
+}
 
-// write back modified export json
-console.log(JSON.stringify({
-    "_state": "done",
-    "log": [
-        "file written: "+info.transport.options.target
-    ]
-}));
+(async() => {
+
+    if (tOpts.url) {
+        await sendDataToURL(tOpts.url, JSON.stringify(info));
+        tLog.push(`data sent: ${tOpts.url}`)
+    } 
+    if (tOpts.file) {
+        fs.writeFileSync(tOpts.file, JSON.stringify(info,"","    "));
+        tLog.push(`file written: ${tOpts.file}`)
+    }
+
+    // write back modified export json
+    console.log(JSON.stringify({
+        "_state": "done",
+        "log": tLog
+    }));
+    process.exit(0);
+})();
+
