@@ -35,23 +35,26 @@ jobs:
         run: |
           git submodule update --init --recursive
 
+      - name: login to docker.fylr.io
+        shell: bash
+        env:
+          FYLR_DOCKER_REGISTRY_LOGIN: ${{ secrets.FYLR_DOCKER_REGISTRY_LOGIN }}
+          FYLR_DOCKER_REGISTRY_PASSWORD: ${{ secrets.FYLR_DOCKER_REGISTRY_PASSWORD }}
+          FYLR_DOCKER_REGISTRY_ADDRESS: ${{ secrets.FYLR_DOCKER_REGISTRY_ADDRESS }}
+        run: echo "$FYLR_DOCKER_REGISTRY_PASSWORD" | docker login $FYLR_DOCKER_REGISTRY_ADDRESS -u $FYLR_DOCKER_REGISTRY_LOGIN --password-stdin
+
       - name: build the container
         shell: bash
         env:
           GITHUB_COMMIT_SHA: ${{ github.sha }}
-          PRIVATE_DOCKER_REGISTRY_ADDRESS: ${{ secrets.PRIVATE_DOCKER_REGISTRY_ADDRESS }}
-          PRIVATE_DOCKER_REGISTRY_USERNAME: ${{ secrets.PRIVATE_DOCKER_REGISTRY_USERNAME }}
-          PRIVATE_DOCKER_REGISTRY_PASSWORD: ${{ secrets.PRIVATE_DOCKER_REGISTRY_PASSWORD }}
+          FYLR_DOCKER_REGISTRY_ADDRESS: ${{ secrets.FYLR_DOCKER_REGISTRY_ADDRESS }}
         run: |
-          docker login $PRIVATE_DOCKER_REGISTRY_ADDRESS -u $PRIVATE_DOCKER_REGISTRY_USERNAME -p "$PRIVATE_DOCKER_REGISTRY_PASSWORD"
-          docker build -t $PRIVATE_DOCKER_REGISTRY_ADDRESS/fylr/fylr-plugins:master --label "$GITHUB_COMMIT_SHA" -f Dockerfile .
+          docker build -t $FYLR_DOCKER_REGISTRY_ADDRESS/fylr-priv/fylr-plugins:master --label "$GITHUB_COMMIT_SHA" -f Dockerfile .
 
       - name: push the container
         shell: bash
         env:
-          PRIVATE_DOCKER_REGISTRY_ADDRESS: ${{ secrets.PRIVATE_DOCKER_REGISTRY_ADDRESS }}
-          PRIVATE_DOCKER_REGISTRY_USERNAME: ${{ secrets.PRIVATE_DOCKER_REGISTRY_USERNAME }}
-          PRIVATE_DOCKER_REGISTRY_PASSWORD: ${{ secrets.PRIVATE_DOCKER_REGISTRY_PASSWORD }}
+          FYLR_DOCKER_REGISTRY_ADDRESS: ${{ secrets.FYLR_DOCKER_REGISTRY_ADDRESS }}
         run: |
-          docker push $PRIVATE_DOCKER_REGISTRY_ADDRESS/fylr/fylr-plugins:master
-          echo "container sha: $(docker inspect --format='{{index .RepoDigests 0}}' $PRIVATE_DOCKER_REGISTRY_ADDRESS/fylr/fylr-plugins:master)"
+          docker push $FYLR_DOCKER_REGISTRY_ADDRESS/fylr-priv/fylr-plugins:master
+          echo "container sha: $(docker inspect --format='{{index .RepoDigests 0}}' $FYLR_DOCKER_REGISTRY_ADDRESS/fylr-priv/fylr-plugins:master)"
