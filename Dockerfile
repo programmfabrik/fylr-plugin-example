@@ -1,4 +1,4 @@
-FROM private.docker.fylr.io/fylr/fylr-server-docker-dependencies:latest
+FROM docker.fylr.io/fylr-priv/fylr-server-docker-dependencies:latest
 
 LABEL maintainer="Leon Steinhäuser <leon.steinhaeuser@fylr.io>"
 
