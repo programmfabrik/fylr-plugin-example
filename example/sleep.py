@@ -1,4 +1,3 @@
-import time
-print("Start sleeping")
+import time, json
 time.sleep(5)
-print("Woke up")
+print(json.dumps({"status": "ok"}))

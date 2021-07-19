@@ -26,9 +26,9 @@ extensions:
 
   dump/sleep:
     exec:
-      service: "python3"
+      service: "python"
       commands:
-        - prog: "python3"
+        - prog: "python"
           stdout:
             type: "body"
           args:
@@ -113,7 +113,7 @@ callbacks:
 
   export/demo:
     exec:
-      timeoutSec: 60
+      timeoutSec: 120
       service: "node"
       commands:
         - prog: "node"
