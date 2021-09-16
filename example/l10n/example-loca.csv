@@ -1,3 +1,5 @@
-key,de-DE
-server.config.name.system.plugin_fylr_example_comment,Das ist das FYLR Example Plugin
-server.config.parameter.system.plugin_fylr_example_comment.value.label,set_comment.js _comment
+key,de-DE,en-US
+server.config.name.system.plugin_fylr_example_comment,Das ist das FYLR Example Plugin,This is the FYLR example plugin
+server.config.parameter.system.plugin_fylr_example_comment.value.label,set_comment.js _comment,set_comment.js _comment
+fylr.example.custom.data.type.name,FYLR example custom data type,FYLR example custom data type
+

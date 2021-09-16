@@ -3,7 +3,7 @@ plugin:
   version: "2"
   l10n: l10n/example-loca.csv
   webfrontend:
-    url: main.js
+    url: FylrExample.js
   displayname:
     de-DE: FYLR-Example
     en-US: FYLR-Example
@@ -96,7 +96,6 @@ extensions:
               value: "%info.json%"
 
 callbacks:
-
   export_transport/copy_file:
     exec:
       timeoutSec: 60
@@ -153,7 +152,7 @@ callbacks:
             - type: "value"
               value: "set_comment.js"
 
-  DISABLED-session_authenticate:
+  DISABLED-2session_authenticate:
     exec:
       service: "node"
       commands:
@@ -203,4 +202,34 @@ system_rights:
       - name: preview-versions
         type: preview-versions
 
+custom_types:
+  example:
+    config:
+      schema:
+        - name: fylr_example_config
+          parameters:
+            value:
+              type: bool
+      mask:
+        - name: fylr_example_config
+          parameters:
+            value:
+              type: bool
+    update:
+      exec:
+        service: "node"
+        commands:
+          - prog: "node"
+            stdin:
+              type: body
+            stdout:
+              type: body
+            args:
+              - type: "value"
+                value: "customDataTypeUpdater/update.js"
+              - type: "value"
+                value: "%info.json%"
+      timeout: 60
+      batch_size: 10
+      expires_days: 1
 
