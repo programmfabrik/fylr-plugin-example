@@ -20,7 +20,9 @@ main = (payload) => {
         case "update":
             for (var i = 0; i < payload.objects.length; i++) {
                 payload.objects[i].data.numberfield++
-                payload.objects[i]._expires_at = (new Date()).AddMinutes(2).toISOString()
+                payload.objects[i].data._expires_at = (new Date()).AddMinutes(2).toISOString()
+                // increment version. this is checked by apitest test/api/db/custom_data_type_updater
+                payload.objects[i].data.version++
                 console.error("data", i, payload.objects[i].data.numberfield)
             }
             outputData({
