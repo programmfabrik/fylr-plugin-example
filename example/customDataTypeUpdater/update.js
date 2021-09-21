@@ -45,12 +45,12 @@ main = (payload) => {
     }
 }
 
-outputData = async (data) => {
+outputData = (data) => {
     out = {
         "status_code": 200,
         "body": data
     }
-    await dv.send(out)
+    // await dv.send(out)
     process.stdout.write(JSON.stringify(out))
     process.exit(0);
 }
@@ -73,7 +73,7 @@ outputErr = (err2) => {
     run_main = () => {
         try {
             let payload = JSON.parse(data)
-            dv.send(payload)
+            // dv.send(payload)
             console.error("data has length", data.length)
             console.error(payload)
             main(payload)
@@ -83,7 +83,7 @@ outputErr = (err2) => {
         }
     }
 
-    dv.send(JSON.parse(process.argv[2]))
+    // dv.send(JSON.parse(process.argv[2]))
 
     let data = ""
     process.stdin.setEncoding('utf8');
