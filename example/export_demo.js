@@ -82,13 +82,10 @@ try {
     })
 
     info.export._state = "done"
-    info.export._plugin_event_info = {
-        "log": [
-            "Add a protocol here",
-            "With multiple entries like this"
-        ],
-    }
-    info.export.export._version++
+    info.export._plugin_log = [
+        "Add a protocol here",
+        "With multiple entries like this"
+    ]
     delete(info.export._log)
 
     // write back modified export json

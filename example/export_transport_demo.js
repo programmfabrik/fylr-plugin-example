@@ -48,7 +48,7 @@ const sendDataToURL = async (url, data) => {
     return new Promise(
         (resolve, reject) => {
             const parsedURL = new URL(url);
-            const client = parsedURL.protocol === 'https' ? https : http; 
+            const client = parsedURL.protocol === 'https' ? https : http;
             const req = client.request(url, {
                 method: 'POST',
                 headers: {
@@ -74,7 +74,7 @@ const sendDataToURL = async (url, data) => {
     if (tOpts.url) {
         await sendDataToURL(tOpts.url, JSON.stringify(info));
         tLog.push(`data sent: ${tOpts.url}`)
-    } 
+    }
     if (tOpts.file) {
         fs.writeFileSync(tOpts.file, JSON.stringify(info,"","    "));
         tLog.push(`file written: ${tOpts.file}`)
@@ -83,7 +83,7 @@ const sendDataToURL = async (url, data) => {
     // write back modified export json
     console.log(JSON.stringify({
         "_state": "done",
-        "log": tLog
+        "_transport_log": tLog
     }));
     process.exit(0);
 })();
