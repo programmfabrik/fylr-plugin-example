@@ -4,6 +4,8 @@ plugin:
   l10n: l10n/example-loca.csv
   webfrontend:
     url: FylrExample.js
+    css: FyleExample.css
+    html: FylrExample.html
   custom:
     henk: denk
   displayname:
@@ -24,7 +26,7 @@ extensions:
             type: "body"
           args:
             - type: "value"
-              value: "empty.js"
+              value: "server/extension/empty.js"
 
   dump/sleep:
     exec:
@@ -35,7 +37,7 @@ extensions:
             type: "body"
           args:
             - type: "value"
-              value: "sleep.py"
+              value: "server/extension/sleep.py"
 
   dump/info:
     exec:
@@ -48,7 +50,7 @@ extensions:
             type: "body"
           args:
             - type: "value"
-              value: "dump_info.js"
+              value: "server/extension/dump_info.js"
             - type: "value"
               value: "%info.json%"
 
@@ -63,7 +65,7 @@ extensions:
             type: "body"
           args:
             - type: "value"
-              value: "error_400.js"
+              value: "server/extension/error.js"
 
   dump/file:
     exec:
@@ -76,7 +78,7 @@ extensions:
             type: "body"
           args:
             - type: "value"
-              value: "stdin_to_file.js"
+              value: "server/extension/stdin_to_file.js"
             - type: "value"
               value: "/tmp/record.log"
             - type: "value"
@@ -93,7 +95,7 @@ extensions:
             type: "body"
           args:
             - type: "value"
-              value: "set_comment.js"
+              value: "server/db_pre_save+webhook/set_comment.js"
             - type: "value"
               value: "%info.json%"
 
@@ -108,9 +110,21 @@ callbacks:
             type: body
           args:
             - type: "value"
-              value: "export_transport_demo.js"
+              value: "server/export_transport/demo.js"
             - type: "value"
               value: "%info.json%"
+
+  export/error:
+    exec:
+      timeoutSec: 120
+      service: "node"
+      commands:
+        - prog: "node"
+          stdout:
+            type: body
+          args:
+            - type: "value"
+              value: "server/export/_missing_.js"
 
   export/demo:
     exec:
@@ -124,9 +138,10 @@ callbacks:
             - type: "value"
               value: "--max-http-header-size=1000000"
             - type: "value"
-              value: "export_demo.js"
+              value: "server/export/demo.js"
             - type: "value"
               value: "%info.json%"
+
 
   transition_db_pre_save/set_comment:
     exec:
@@ -139,7 +154,7 @@ callbacks:
             type: body
           args:
             - type: "value"
-              value: "set_comment.js"
+              value: "server/db_pre_save+webhook/set_comment.js"
 
   db_pre_save:
     exec:
@@ -152,20 +167,7 @@ callbacks:
             type: body
           args:
             - type: "value"
-              value: "set_comment.js"
-
-  DISABLED-2session_authenticate:
-    exec:
-      service: "node"
-      commands:
-        - prog: "node"
-          stdin:
-            type: body
-          stdout:
-            type: body
-          args:
-            - type: "value"
-              value: "cat.js"
+              value: "server/db_pre_save+webhook/set_comment.js"
 
 base_config:
   - name: comment
