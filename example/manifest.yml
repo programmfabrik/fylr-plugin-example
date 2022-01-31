@@ -142,6 +142,19 @@ callbacks:
             - type: "value"
               value: "%info.json%"
 
+  export/file_error:
+    exec:
+      timeoutSec: 120
+      service: "node"
+      commands:
+        - prog: "node"
+          stdout:
+            type: body
+          args:
+            - type: "value"
+              value: "server/export/file_error.js"
+            - type: "value"
+              value: "%info.json%"
 
   transition_db_pre_save/set_comment:
     exec:
