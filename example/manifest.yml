@@ -110,7 +110,61 @@ callbacks:
             type: body
           args:
             - type: "value"
-              value: "server/export_transport/demo.js"
+              value: "server/export_transport/copy_file.js"
+            - type: "value"
+              value: "%info.json%"
+
+  export_transport/module_missing:
+    exec:
+      timeoutSec: 120
+      service: "node"
+      commands:
+        - prog: "node"
+          stdout:
+            type: body
+          args:
+            - type: "value"
+              value: "server/export_transport/_missing_.js"
+
+  export_transport/error:
+    exec:
+      timeoutSec: 60
+      service: "node"
+      commands:
+        - prog: "node"
+          stdout:
+            type: body
+          args:
+            - type: "value"
+              value: "server/export_transport/error.js"
+            - type: "value"
+              value: "%info.json%"
+
+  export/module_missing:
+    exec:
+      timeoutSec: 120
+      service: "node"
+      commands:
+        - prog: "node"
+          stdout:
+            type: body
+          args:
+            - type: "value"
+              value: "server/export/_missing_.js"
+
+  export/md5_sums:
+    exec:
+      timeoutSec: 120
+      service: "node"
+      commands:
+        - prog: "node"
+          stdout:
+            type: body
+          args:
+            - type: "value"
+              value: "--max-http-header-size=1000000"
+            - type: "value"
+              value: "server/export/md5_sums.js"
             - type: "value"
               value: "%info.json%"
 
@@ -124,35 +178,7 @@ callbacks:
             type: body
           args:
             - type: "value"
-              value: "server/export/_missing_.js"
-
-  export/demo:
-    exec:
-      timeoutSec: 120
-      service: "node"
-      commands:
-        - prog: "node"
-          stdout:
-            type: body
-          args:
-            - type: "value"
-              value: "--max-http-header-size=1000000"
-            - type: "value"
-              value: "server/export/demo.js"
-            - type: "value"
-              value: "%info.json%"
-
-  export/file_error:
-    exec:
-      timeoutSec: 120
-      service: "node"
-      commands:
-        - prog: "node"
-          stdout:
-            type: body
-          args:
-            - type: "value"
-              value: "server/export/file_error.js"
+              value: "server/export/error.js"
             - type: "value"
               value: "%info.json%"
 
