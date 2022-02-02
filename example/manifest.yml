@@ -100,100 +100,99 @@ extensions:
               value: "%info.json%"
 
 callbacks:
-  export_transport/copy_file:
-    exec:
-      timeoutSec: 60
-      service: "node"
-      commands:
-        - prog: "node"
-          stdout:
-            type: body
-          args:
-            - type: "value"
-              value: "server/export_transport/copy_file.js"
-            - type: "value"
-              value: "%info.json%"
+  export_transport:
+    copy_file:
+      exec:
+        timeoutSec: 60
+        service: "node"
+        commands:
+          - prog: "node"
+            stdout:
+              type: body
+            args:
+              - type: "value"
+                value: "server/export_transport/copy_file.js"
+              - type: "value"
+                value: "%info.json%"
+    module_missing:
+      exec:
+        timeoutSec: 120
+        service: "node"
+        commands:
+          - prog: "node"
+            stdout:
+              type: body
+            args:
+              - type: "value"
+                value: "server/export_transport/_missing_.js"
+    error:
+      exec:
+        timeoutSec: 60
+        service: "node"
+        commands:
+          - prog: "node"
+            stdout:
+              type: body
+            args:
+              - type: "value"
+                value: "server/export_transport/error.js"
+              - type: "value"
+                value: "%info.json%"
 
-  export_transport/module_missing:
-    exec:
-      timeoutSec: 120
-      service: "node"
-      commands:
-        - prog: "node"
-          stdout:
-            type: body
-          args:
-            - type: "value"
-              value: "server/export_transport/_missing_.js"
+  export:
+    module_missing:
+      exec:
+        timeoutSec: 120
+        service: "node"
+        commands:
+          - prog: "node"
+            stdout:
+              type: body
+            args:
+              - type: "value"
+                value: "server/export/_missing_.js"
+    md5_sums:
+      exec:
+        timeoutSec: 120
+        service: "node"
+        commands:
+          - prog: "node"
+            stdout:
+              type: body
+            args:
+              - type: "value"
+                value: "--max-http-header-size=1000000"
+              - type: "value"
+                value: "server/export/md5_sums.js"
+              - type: "value"
+                value: "%info.json%"
+    error:
+      exec:
+        timeoutSec: 120
+        service: "node"
+        commands:
+          - prog: "node"
+            stdout:
+              type: body
+            args:
+              - type: "value"
+                value: "server/export/error.js"
+              - type: "value"
+                value: "%info.json%"
 
-  export_transport/error:
-    exec:
-      timeoutSec: 60
-      service: "node"
-      commands:
-        - prog: "node"
-          stdout:
-            type: body
-          args:
-            - type: "value"
-              value: "server/export_transport/error.js"
-            - type: "value"
-              value: "%info.json%"
-
-  export/module_missing:
-    exec:
-      timeoutSec: 120
-      service: "node"
-      commands:
-        - prog: "node"
-          stdout:
-            type: body
-          args:
-            - type: "value"
-              value: "server/export/_missing_.js"
-
-  export/md5_sums:
-    exec:
-      timeoutSec: 120
-      service: "node"
-      commands:
-        - prog: "node"
-          stdout:
-            type: body
-          args:
-            - type: "value"
-              value: "--max-http-header-size=1000000"
-            - type: "value"
-              value: "server/export/md5_sums.js"
-            - type: "value"
-              value: "%info.json%"
-
-  export/error:
-    exec:
-      timeoutSec: 120
-      service: "node"
-      commands:
-        - prog: "node"
-          stdout:
-            type: body
-          args:
-            - type: "value"
-              value: "server/export/error.js"
-            - type: "value"
-              value: "%info.json%"
-
-  transition_db_pre_save/set_comment:
-    exec:
-      service: "node"
-      commands:
-        - prog: "node"
-          stdin:
-            type: body
-          stdout:
-            type: body
-          args:
-            - type: "value"
-              value: "server/db_pre_save+webhook/set_comment.js"
+  transition_db_pre_save:
+    set_comment:
+      exec:
+        service: "node"
+        commands:
+          - prog: "node"
+            stdin:
+              type: body
+            stdout:
+              type: body
+            args:
+              - type: "value"
+                value: "server/db_pre_save+webhook/set_comment.js"
 
   db_pre_save:
     exec:

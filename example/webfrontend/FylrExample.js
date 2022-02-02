@@ -137,7 +137,7 @@ FylrExampleTransition = (function(superClass) {
     return "fylr_example:set_comment";
   };
 
-  FylrExampleTransition.prototype.getDisplayName = function() {
+  FylrExampleTransition.getDisplayName = function() {
     return "Comment";
   };
 

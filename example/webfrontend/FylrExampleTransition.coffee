@@ -14,7 +14,7 @@ class FylrExampleTransition extends TransitionActionAction
 	@getType: ->
 		return "fylr_example:set_comment"
 
-	getDisplayName: ->
+	@getDisplayName: ->
 		return "Comment"
 
 TransitionAction.registerAction(FylrExampleTransition)
