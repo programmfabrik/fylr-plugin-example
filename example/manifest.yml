@@ -275,3 +275,11 @@ custom_types:
       batch_size: 10
       expires_days: 1
 
+fas_config:
+  produce_config: custom_produce.yml
+  recipes:
+    - recipe_metadata.yml
+    - recipe_grayscale.yml
+
+
+

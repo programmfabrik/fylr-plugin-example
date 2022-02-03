@@ -1,0 +1,43 @@
+name: example_image
+class: image
+targets:
+  grayIM:
+    description: make a gray image
+    execs:
+      - match: {}
+        service: convert
+        timeoutmsec: 0
+        extension: "jpg"
+        commands:
+          - prog: convert
+            args:
+            - type: file_in
+              file:
+                url: "%_source.url%"
+                name: "%_source.generatedname%"
+            - -set
+            - colorspace
+            - Gray
+            - type: file_out
+              file:
+                url: "%_target.url%"
+                name: out.jpg
+  grayPy:
+    description: make a gray image
+    execs:
+      - match: {}
+        service: python3
+        timeoutmsec: 0
+        extension: "jpg"
+        commands:
+          - prog: python3
+            args:
+              - "server/recipe/grayscale.py"
+              - type: file_in
+                file:
+                  url: "%_source.url%"
+                  name: "%_source.generatedname%"
+              - type: file_out
+                file:
+                  url: "%_target.url%"
+                  name: out.jpg

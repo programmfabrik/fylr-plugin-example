@@ -1,0 +1,28 @@
+classes:
+  office:
+    uploadenabledextensions:
+      - pdf
+    # all office documents will run this metadata item
+    custommetadata:
+      - recipename: fylr_example:example_metadata
+        targetname: example
+    versions:
+      # for originals in class office produce additional metadata
+      - name: original
+        extensions:
+          - pdf
+        custommetadata:
+          - recipename: fylr_example:example_metadata
+            targetname: example
+  image:
+    custommetadata:
+      - recipename: fylr_example:example_metadata
+        targetname: example
+    versions:
+      - name: example
+        extensions:
+          - jpg
+          - png
+        recipename: fylr_example:example_image
+        targetname: grayPy
+        zoomable: true
