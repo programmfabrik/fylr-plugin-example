@@ -12,11 +12,13 @@ targets:
       - service: metadata
         extension: "<nil>"
         commands:
-          - prog: tika
+          - prog: java
             stdout:
               type: file
               file: "pdf.txt"
             args:
+              - -jar
+              - server/recipe/tika-app-1.26.jar
               - --text
               - type: file_in
                 file:
