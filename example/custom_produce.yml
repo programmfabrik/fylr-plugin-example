@@ -4,7 +4,7 @@ classes:
       - pdf
     # all office documents will run this metadata item
     custommetadata:
-      - recipename: fylr_example:example_metadata
+      - recipename: fylr_example:pdf2text_metadata
         targetname: pdf2text
     # versions:
     #   # for originals in class office produce additional metadata

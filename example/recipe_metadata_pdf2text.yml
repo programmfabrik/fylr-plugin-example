@@ -1,27 +1,9 @@
-name: example_metadata
+name: pdf2text_metadata
 description: recipe to add dummy exmaple metadata
 class: _metadata
 extensions:
   - pdf
 targets:
-  example:
-    metadata:
-      - file: "example_metadata.json"
-    execs:
-      - service: node
-        extension: "<nil>"
-        commands:
-          - prog: node
-            args:
-              - type: "value"
-                value: "server/recipe/meta.js"
-              - type: file_in
-                file:
-                  name: "source.file"
-                  url: "%_source.url%"
-              - type: file_out
-                file:
-                  name: "example_metadata.json"
   pdf2text:
     metadata:
       - file: "pdf.txt"
