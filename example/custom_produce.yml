@@ -5,15 +5,15 @@ classes:
     # all office documents will run this metadata item
     custommetadata:
       - recipename: fylr_example:example_metadata
-        targetname: example
-    versions:
-      # for originals in class office produce additional metadata
-      - name: original
-        extensions:
-          - pdf
-        custommetadata:
-          - recipename: fylr_example:example_metadata
-            targetname: example
+        targetname: pdf2text
+    # versions:
+    #   # for originals in class office produce additional metadata
+    #   - name: original
+    #     extensions:
+    #       - pdf
+    #     custommetadata:
+    #       - recipename: fylr_example:example_metadata
+    #         targetname: example
   image:
     custommetadata:
       - recipename: fylr_example:example_metadata
@@ -23,6 +23,7 @@ classes:
         extensions:
           - jpg
           - png
+        rightsmanagement: true
         recipename: fylr_example:example_image
         targetname: grayIM
         zoomable: true

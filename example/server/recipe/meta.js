@@ -9,8 +9,11 @@ fs.writeFileSync(fn, JSON.stringify({
     "Zonk": {
         "Honk": "henk"
     },
+    "_fulltext": {
+        "text": ["horst sieht torsten"]
+    },
     "_technical_metadata": {
-        "horst": {
+        "huhu": {
             "gut": "sieht torsten"
         }
     }
