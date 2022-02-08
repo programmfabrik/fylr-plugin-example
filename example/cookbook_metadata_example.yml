@@ -1,7 +1,7 @@
 name: example_metadata
 description: recipe to add dummy exmaple metadata
 class: _metadata
-targets:
+recipes:
   example:
     metadata:
       - file: "example_metadata.json"

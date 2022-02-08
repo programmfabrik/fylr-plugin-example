@@ -1,6 +1,6 @@
 name: example_image
 class: image
-targets:
+recipes:
   grayIM:
     description: make a gray image
     execs:

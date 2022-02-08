@@ -3,7 +3,7 @@ description: recipe to add dummy exmaple metadata
 class: _metadata
 extensions:
   - pdf
-targets:
+recipes:
   pdf2text:
     metadata:
       - file: "pdf.txt"
