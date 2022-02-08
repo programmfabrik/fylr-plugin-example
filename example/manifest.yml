@@ -277,10 +277,10 @@ custom_types:
 
 fas_config:
   produce_config: custom_produce.yml
-  recipes:
-    - recipe_metadata_example.yml
-    - recipe_metadata_pdf2text.yml
-    - recipe_grayscale.yml
+  cookbooks:
+    - cookbook_metadata_example.yml
+    - cookbook_metadata_pdf2text.yml
+    - cookbook_grayscale.yml
 
 
 
