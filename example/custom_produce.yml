@@ -1,29 +1,37 @@
+custommetadata:
+  - cookbook: fylr_example:pdf2text_metadata
+    recipe: pdf2text
+    extensions:
+      - pdf
+    include_versions: true
+
 classes:
   office:
     uploadenabledextensions:
       - pdf
-    # all office documents will run this metadata item
     custommetadata:
-      - recipename: fylr_example:pdf2text_metadata
-        targetname: pdf2text
+      - cookbook: fylr_example:pdf2text_metadata
+        recipe: pdf2text
+
+    # all office documents will run this metadata item
     # versions:
     #   # for originals in class office produce additional metadata
     #   - name: original
     #     extensions:
     #       - pdf
     #     custommetadata:
-    #       - recipename: fylr_example:example_metadata
-    #         targetname: example
+    #       - cookbook: fylr_example:example_metadata
+    #         recipe: example
   image:
     custommetadata:
-      - recipename: fylr_example:example_metadata
-        targetname: example
+      - cookbook: fylr_example:example_metadata
+        recipe: example
     versions:
       - name: example
         extensions:
           - jpg
           - png
         rightsmanagement: true
-        recipename: fylr_example:example_image
-        targetname: grayIM
+        cookbook: fylr_example:example_image
+        recipe: grayIM
         zoomable: true
