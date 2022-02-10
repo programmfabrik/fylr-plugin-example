@@ -3,16 +3,20 @@ custommetadata:
     recipe: pdf2text
     extensions:
       - pdf
-    include_versions: true
+    includeversions: true
+  - cookbook: fylr_example:example_metadata
+    recipe: example
+    includeversions: true
+    extensions:
+      - png
 
 classes:
   office:
     uploadenabledextensions:
       - pdf
-    custommetadata:
-      - cookbook: fylr_example:pdf2text_metadata
-        recipe: pdf2text
-
+    # custommetadata:
+    #   - cookbook: fylr_example:pdf2text_metadata
+    #     recipe: pdf2text
     # all office documents will run this metadata item
     # versions:
     #   # for originals in class office produce additional metadata
@@ -23,9 +27,6 @@ classes:
     #       - cookbook: fylr_example:example_metadata
     #         recipe: example
   image:
-    custommetadata:
-      - cookbook: fylr_example:example_metadata
-        recipe: example
     versions:
       - name: example
         extensions:
