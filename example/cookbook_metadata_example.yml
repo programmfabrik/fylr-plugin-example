@@ -1,8 +1,8 @@
 name: example_metadata
 description: recipe to add dummy exmaple metadata
-class: _metadata
 recipes:
   example:
+    class: _metadata
     metadata:
       - file: "example_metadata.json"
     execs:
