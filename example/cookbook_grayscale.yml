@@ -1,7 +1,7 @@
 name: example_image
-class: image
 recipes:
   grayIM:
+    class: image
     description: make a gray image
     execs:
       - match: {}
@@ -23,6 +23,7 @@ recipes:
                 url: "%_target.url%"
                 name: out.jpg
   grayPy:
+    class: image
     description: make a gray image
     execs:
       - match: {}

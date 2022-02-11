@@ -1,16 +1,16 @@
 name: pdf2text_metadata
 description: recipe to add dummy exmaple metadata
-class: _metadata
-extensions:
-  - pdf
 recipes:
   pdf2text:
+    class: _metadata
+    extensions:
+      - pdf
     metadata:
       - file: "pdf.txt"
         fulltext: true
     execs:
       - service: metadata
-        extension: "<nil>"
+        extension: "<nils>"
         commands:
           - prog: java
             stdout:
