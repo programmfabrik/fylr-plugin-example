@@ -38,7 +38,19 @@ process.stdin.on('end', () => {
         comment = (data.info.request && data.info.request.query && data.info.request.query.comment) || data.info.comment
     }
 
-    if (comment == undefined) {
+    // set object.col_a if unset (used in test/api/plugin/not_null)
+    var modified = false
+    data.objects.forEach((obj, idx) => {
+        if (obj._objecttype == "object") {
+            var col_a = obj[obj._objecttype].col_a
+            if (typeof col_a === "string" && col_a === "") {
+                obj[obj._objecttype].col_a = "<empty>" // avoid not null errors
+                modified = true
+            }
+        }
+    })
+
+    if (comment == undefined && !modified) {
         // console.error(JSON.stringify(info,"","    "))
         // Output feeback on STDOUT
         // Send back empty list, indicating that nothing was changed by us
@@ -56,20 +68,20 @@ process.stdin.on('end', () => {
 
         // console.error(JSON.stringify(data.objects,"","    "));
 
-        data.objects.forEach((d, i) => {
-            if (d._current) {
-                console.error("Adding comment to object", d._uuid, d[d._objecttype]._version, d._current[d._objecttype]._version)
+        data.objects.forEach((obj, idx) => {
+            if (obj._current) {
+                console.error("Adding comment to object", obj._uuid, obj[obj._objecttype]._version, obj._current[obj._objecttype]._version)
             } else {
-                console.error("Adding comment to object", d._uuid, d[d._objecttype]._version)
+                console.error("Adding comment to object", obj._uuid, obj[obj._objecttype]._version)
             }
-            if (d._comment) {
-                d._comment = d._comment+" "+comment+" #"+i
+            if (obj._comment) {
+                obj._comment = obj._comment+" "+comment+" #"+idx
             } else {
-                d._comment = comment+" #"+i
+                obj._comment = comment+" #"+idx
             }
             // remove the _current
-            delete(d._current)
-            delete(d._path)
+            delete(obj._current)
+            delete(obj._path)
         });
         var myArgs = process.argv.slice(0);
         delete(data.info)
