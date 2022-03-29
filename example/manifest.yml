@@ -213,6 +213,12 @@ base_config:
       value:
         type: text
         position: 0
+  - name: custom
+    parameters:
+      on_off:
+        type: bool
+      data:
+        type: json
 
 system_rights:
   - name: example_right

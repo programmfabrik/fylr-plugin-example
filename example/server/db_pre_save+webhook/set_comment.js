@@ -62,8 +62,8 @@ process.stdin.on('end', () => {
 
     // add more info from the config value
     try {
-        if (data.info && data.info.config && data.info.config.system && data.info.config.system.plugin_fylr_example_comment.value) {
-            comment = comment + " " + data.info.config.system.plugin_fylr_example_comment.value
+        if (data.info && data.info.config && data.info.config.plugin && data.info.config.plugin.fylr_example.config.comment.value) {
+            comment = comment + " " + data.info.config.plugin.fylr_example.config.comment.value
         }
 
         // console.error(JSON.stringify(data.objects,"","    "));
