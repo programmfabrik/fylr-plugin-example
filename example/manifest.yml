@@ -196,10 +196,14 @@ callbacks:
 
   db_pre_save:
     steps:
-      - filter:
-          - type: objecttype
-            objecttypes:
-              - bilder
+      - name: "set comment for 'object'"
+        callback: set_comment
+        filter:
+          type: objecttype
+          objecttypes:
+            - object
+    callbacks:
+      set_comment:
         exec:
           service: "node"
           commands:
