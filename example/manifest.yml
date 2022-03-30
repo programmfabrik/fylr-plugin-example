@@ -202,6 +202,7 @@ callbacks:
           type: objecttype
           objecttypes:
             - object
+            - objects
     callbacks:
       set_comment:
         exec:
