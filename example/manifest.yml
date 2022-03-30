@@ -195,17 +195,22 @@ callbacks:
                 value: "server/db_pre_save+webhook/set_comment.js"
 
   db_pre_save:
-    exec:
-      service: "node"
-      commands:
-        - prog: "node"
-          stdin:
-            type: body
-          stdout:
-            type: body
-          args:
-            - type: "value"
-              value: "server/db_pre_save+webhook/set_comment.js"
+    steps:
+      - filter:
+          - type: objecttype
+            objecttypes:
+              - bilder
+        exec:
+          service: "node"
+          commands:
+            - prog: "node"
+              stdin:
+                type: body
+              stdout:
+                type: body
+              args:
+                - type: "value"
+                  value: "server/db_pre_save+webhook/set_comment.js"
 
 base_config:
   - name: comment
