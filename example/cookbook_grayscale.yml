@@ -33,7 +33,7 @@ recipes:
         commands:
           - prog: python3
             args:
-              - "server/recipe/grayscale.py"
+              - "%_exec.pluginDir%/server/recipe/grayscale.py"
               - type: file_in
                 file:
                   url: "%_source.url%"

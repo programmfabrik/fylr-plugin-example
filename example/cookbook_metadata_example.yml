@@ -12,7 +12,7 @@ recipes:
           - prog: node
             args:
               - type: "value"
-                value: "server/recipe/meta.js"
+                value: "%_exec.pluginDir%/server/recipe/meta.js"
               - type: file_in
                 file:
                   name: "source.file"

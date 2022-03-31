@@ -18,7 +18,7 @@ recipes:
               file: "pdf.txt"
             args:
               - -jar
-              - server/recipe/tika-app-1.26.jar
+              - "%_exec.pluginDir%/server/recipe/tika-app-1.26.jar"
               - --text
               - type: file_in
                 file:
