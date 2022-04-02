@@ -26,7 +26,7 @@ extensions:
             type: "body"
           args:
             - type: "value"
-              value: "server/extension/empty.js"
+              value: "%_exec.pluginDir%/server/extension/empty.js"
 
   dump/sleep:
     exec:
@@ -37,7 +37,7 @@ extensions:
             type: "body"
           args:
             - type: "value"
-              value: "server/extension/sleep.py"
+              value: "%_exec.pluginDir%/server/extension/sleep.py"
 
   dump/info:
     exec:
@@ -50,7 +50,7 @@ extensions:
             type: "body"
           args:
             - type: "value"
-              value: "server/extension/dump_info.js"
+              value: "%_exec.pluginDir%/server/extension/dump_info.js"
             - type: "value"
               value: "%info.json%"
 
@@ -65,7 +65,7 @@ extensions:
             type: "body"
           args:
             - type: "value"
-              value: "server/extension/error.js"
+              value: "%_exec.pluginDir%/server/extension/error.js"
 
   dump/file:
     exec:
@@ -78,7 +78,7 @@ extensions:
             type: "body"
           args:
             - type: "value"
-              value: "server/extension/stdin_to_file.js"
+              value: "%_exec.pluginDir%/server/extension/stdin_to_file.js"
             - type: "value"
               value: "/tmp/record.log"
             - type: "value"
@@ -95,7 +95,7 @@ extensions:
             type: "body"
           args:
             - type: "value"
-              value: "server/db_pre_save+webhook/set_comment.js"
+              value: "%_exec.pluginDir%/server/db_pre_save+webhook/set_comment.js"
             - type: "value"
               value: "%info.json%"
 
@@ -111,7 +111,7 @@ callbacks:
               type: body
             args:
               - type: "value"
-                value: "server/export_transport/copy_file.js"
+                value: "%_exec.pluginDir%/server/export_transport/copy_file.js"
               - type: "value"
                 value: "%info.json%"
     module_missing:
@@ -124,7 +124,7 @@ callbacks:
               type: body
             args:
               - type: "value"
-                value: "server/export_transport/_missing_.js"
+                value: "%_exec.pluginDir%/server/export_transport/_missing_.js"
     error:
       exec:
         timeoutSec: 60
@@ -135,7 +135,7 @@ callbacks:
               type: body
             args:
               - type: "value"
-                value: "server/export_transport/error.js"
+                value: "%_exec.pluginDir%/server/export_transport/error.js"
               - type: "value"
                 value: "%info.json%"
 
@@ -150,7 +150,7 @@ callbacks:
               type: body
             args:
               - type: "value"
-                value: "server/export/_missing_.js"
+                value: "%_exec.pluginDir%/server/export/_missing_.js"
     md5_sums:
       exec:
         timeoutSec: 120
@@ -163,7 +163,7 @@ callbacks:
               - type: "value"
                 value: "--max-http-header-size=1000000"
               - type: "value"
-                value: "server/export/md5_sums.js"
+                value: "%_exec.pluginDir%/server/export/md5_sums.js"
               - type: "value"
                 value: "%info.json%"
     error:
@@ -176,7 +176,7 @@ callbacks:
               type: body
             args:
               - type: "value"
-                value: "server/export/error.js"
+                value: "%_exec.pluginDir%/server/export/error.js"
               - type: "value"
                 value: "%info.json%"
 
@@ -192,7 +192,7 @@ callbacks:
               type: body
             args:
               - type: "value"
-                value: "server/db_pre_save+webhook/set_comment.js"
+                value: "%_exec.pluginDir%/server/db_pre_save+webhook/set_comment.js"
 
   db_pre_save:
     steps:
@@ -215,7 +215,7 @@ callbacks:
                 type: body
               args:
                 - type: "value"
-                  value: "server/db_pre_save+webhook/set_comment.js"
+                  value: "%_exec.pluginDir%/server/db_pre_save+webhook/set_comment.js"
 
 base_config:
   - name: comment
@@ -284,7 +284,7 @@ custom_types:
               type: body
             args:
               - type: "value"
-                value: "customDataTypeUpdater/update.js"
+                value: "%_exec.pluginDir%/customDataTypeUpdater/update.js"
               - type: "value"
                 value: "%info.json%"
       timeout: 60
@@ -297,7 +297,3 @@ fas_config:
     - cookbook_metadata_example.yml
     - cookbook_metadata_pdf2text.yml
     - cookbook_grayscale.yml
-
-
-
-
