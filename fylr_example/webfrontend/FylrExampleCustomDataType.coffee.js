@@ -103,5 +103,3 @@ FylrExampleCustomDataType = (function(superClass) {
 })(CustomDataType);
 
 CustomDataType.register(FylrExampleCustomDataType);
-
-alert("henk2");

@@ -76,5 +76,3 @@ class FylrExampleCustomDataType extends CustomDataType
 		return
 
 CustomDataType.register(FylrExampleCustomDataType)
-
-alert("henk2")
