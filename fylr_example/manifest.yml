@@ -262,6 +262,13 @@ system_rights:
 
 custom_types:
   example:
+    mapping:
+      textfield:
+        type: text_oneline
+      numberfield:
+        type: number
+      locafield:
+        type: text_l10n
     config:
       schema:
         - name: fylr_example_config
