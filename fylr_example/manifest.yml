@@ -203,6 +203,12 @@ callbacks:
           objecttypes:
             - object
             - objects
+      - name: "set object name with sequence number if empty"
+        callback: set_sequence
+        filter:
+          type: objecttype
+          objecttypes:
+            - categories
     callbacks:
       set_comment:
         exec:
@@ -216,6 +222,20 @@ callbacks:
               args:
                 - type: "value"
                   value: "%_exec.pluginDir%/server/db_pre_save+webhook/set_comment.js"
+      set_sequence:
+        exec:
+          service: python3
+          commands:
+            - prog: python3
+              stdin:
+                type: body
+              stderr:
+                type: body
+              stdout:
+                type: body
+              args:
+                - type: value
+                  value: "%_exec.pluginDir%/server/db_pre_save+sequence/sequential_object_name.py"
 
 base_config:
   - name: comment
@@ -229,6 +249,17 @@ base_config:
         type: bool
       data:
         type: json
+  - name: sequence
+    parameters:
+      objecttype:
+        type: text
+        position: 0
+      ref_field:
+        type: text
+        position: 1
+      num_field:
+        type: text
+        position: 2
 
 system_rights:
   - name: example_right
