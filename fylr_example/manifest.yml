@@ -210,7 +210,7 @@ callbacks:
           objecttypes:
             - object
             - objects
-            - asset
+            - images
     callbacks:
       set_comment:
         exec:
