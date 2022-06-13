@@ -299,8 +299,8 @@ custom_types:
       expires_days: 1
 
 fas_config:
-  produce_config: custom_produce.yml
+  produce_config: fas_config/custom_produce.yml
   cookbooks:
-    - cookbook_metadata_example.yml
-    - cookbook_metadata_pdf2text.yml
-    - cookbook_grayscale.yml
+    - fas_config/cookbook_metadata_example.yml
+    - fas_config/cookbook_metadata_pdf2text.yml
+    - fas_config/cookbook_grayscale.yml

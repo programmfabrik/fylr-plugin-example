@@ -75,4 +75,7 @@ class FylrExampleCustomDataType extends CustomDataType
 		console.info("getSaveData", save_data[@name()])
 		return
 
+	isSourceForMapping: ->
+		return true
+
 CustomDataType.register(FylrExampleCustomDataType)

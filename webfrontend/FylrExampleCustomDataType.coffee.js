@@ -98,6 +98,10 @@ FylrExampleCustomDataType = (function(superClass) {
     console.info("getSaveData", save_data[this.name()]);
   };
 
+  FylrExampleCustomDataType.prototype.isSourceForMapping = function() {
+    return true;
+  };
+
   return FylrExampleCustomDataType;
 
 })(CustomDataType);
