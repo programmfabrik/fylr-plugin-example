@@ -15,7 +15,7 @@ build: clean code ## build all (creates build folder)
 	cp manifest.master.yml $(BUILD_DIR)/$(PLUGIN_NAME)/manifest.yml
 	cp -r server l10n fas_config customDataTypeUpdater $(BUILD_DIR)/$(PLUGIN_NAME)
 	mkdir -p $(BUILD_DIR)/$(PLUGIN_NAME)/webfrontend
-	cp -r $(JS) $(BUILD_DIR)/$(PLUGIN_NAME)/webfrontend
+	cp -r $(JS) webfrontend/FylrExample.html webfrontend/FylrExample.css $(BUILD_DIR)/$(PLUGIN_NAME)/webfrontend
 
 code: $(JS) ## build Coffeescript code
 

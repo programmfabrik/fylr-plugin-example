@@ -4,7 +4,7 @@ plugin:
   l10n: l10n/example-loca.csv
   webfrontend:
     url: FylrExample.js
-    css: FyleExample.css
+    css: FylrExample.css
     html: FylrExample.html
   custom:
     henk: denk
