@@ -5,6 +5,7 @@ COFFEE_FILES = \
 JS = webfrontend/FylrExample.js
 
 PLUGIN_NAME = fylr-plugin-example
+ZIP_NAME ?= $(PLUGIN_NAME).zip
 BUILD_DIR = build
 
 help:
@@ -20,7 +21,7 @@ build: clean code ## build all (creates build folder)
 code: $(JS) ## build Coffeescript code
 
 zip: build ## build zip file for publishing
-	cd $(BUILD_DIR) && zip $(PLUGIN_NAME).zip -r $(PLUGIN_NAME)
+	cd $(BUILD_DIR) && zip $(ZIP_NAME) -r $(PLUGIN_NAME)
 
 clean: ## clean build files
 	rm -f $(JS)
