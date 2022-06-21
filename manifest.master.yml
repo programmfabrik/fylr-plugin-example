@@ -203,7 +203,25 @@ callbacks:
           objecttypes:
             - object
             - objects
+      - name: "bounce json back for 'bounce'"
+        callback: bounce
+        filter:
+          type: objecttype
+          objecttypes:
+            - bounce
     callbacks:
+      bounce:
+        exec:
+          service: "node"
+          commands:
+            - prog: "node"
+              stdin:
+                type: body
+              stdout:
+                type: body
+              args:
+                - type: "value"
+                  value: "%_exec.pluginDir%/server/db_pre_save+webhook/cat.js"
       set_comment:
         exec:
           service: "node"
