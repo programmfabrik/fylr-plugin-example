@@ -322,3 +322,6 @@ fas_config:
     - fas_config/cookbook_metadata_example.yml
     - fas_config/cookbook_metadata_pdf2text.yml
     - fas_config/cookbook_grayscale.yml
+
+custom_events:
+  - FYLR_PLUGIN_EVENT
