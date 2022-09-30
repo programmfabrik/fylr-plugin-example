@@ -8,3 +8,4 @@ server.config.name.system.custom,Eigene Daten,Custom data
 server.config.parameter.system.custom.data.label,-,-
 server.config.parameter.system.custom.on_off.label,-,-
 server.config.parameter.system.custom.on_off.checkbox,Checkbox,Checkbox
+example.detail.sidebar.plugin.render_object|text,Example Plugin: Objekt rendern,Example Plugin: render object
