@@ -9,6 +9,9 @@ class FylrExampleCustomDataType extends CustomDataType
 		else
 			return ["false"]
 
+	supportsStandard: ->
+		true
+
 	initData: (data) ->
 		if not data[@name()]
 			data[@name()] = {}
@@ -45,6 +48,17 @@ class FylrExampleCustomDataType extends CustomDataType
 					label: "numberfield"
 				type: CUI.NumberInput
 				name: "numberfield"
+			,
+				form:
+					label: "locafield"
+				type: CUI.MultiInput
+				control: ez5.loca.getLanguageControl()
+				name: "locafield"
+			,
+				form:
+					label: "stringfield"
+				type: CUI.Input
+				name: "stringfield"
 			]
 			onDataChanged: =>
 				CUI.Events.trigger
@@ -70,6 +84,16 @@ class FylrExampleCustomDataType extends CustomDataType
 	getSaveData: (data, save_data, opts) ->
 		cdata = data[@name()] or data._template?[@name()] or {}
 		cdata._expires_at = (new Date()).toISOString()
+
+		cdata._fulltext =
+			text: cdata.textfield
+			string: cdata.stringfield
+			l10ntext: cdata.locafield
+
+		cdata._standard =
+			text: cdata.textfield
+			l10ntext: cdata.locafield
+
 		save_data[@name()] = CUI.util.copyObject(cdata, true)
 
 		console.info("getSaveData", save_data[@name()])
