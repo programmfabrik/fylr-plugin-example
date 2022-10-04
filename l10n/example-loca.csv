@@ -9,3 +9,20 @@ server.config.parameter.system.custom.data.label,-,-
 server.config.parameter.system.custom.on_off.label,-,-
 server.config.parameter.system.custom.on_off.checkbox,Checkbox,Checkbox
 example.detail.sidebar.plugin.render_object|text,Example Plugin: Objekt rendern,Example Plugin: render object
+server.right.system.plugin.fylr_example.example_right,FYLR Example Plugin: Mögliche Werte um Rechte an Plugins zu steuern,FYLR Example Plugin: Possible values for rights on plugins
+server.right.system.plugin.fylr_example.example_right.parm.bool,Ja/Nein (Boolescher Wert),Yes/No (Boolean)
+server.right.system.plugin.fylr_example.example_right.parm.int,Zahlenfeld,Number
+server.right.system.plugin.fylr_example.example_right.parm.text,Einzeiliger Text,Oneline Text
+server.right.system.plugin.fylr_example.example_right.parm.string-list,Beliebige Auswahl aus Liste von Strings,Select one or more from a list of strings
+server.right.system.plugin.fylr_example.example_right.parm.string-list.option.a,Option A,Option A
+server.right.system.plugin.fylr_example.example_right.parm.string-list.option.b,Option B,Option B
+server.right.system.plugin.fylr_example.example_right.parm.string-list.option.c,Option C,Option C
+server.right.system.plugin.fylr_example.example_right.parm.string-list-one,Auswahl aus Liste von Strings (exakt eine Auswahl),Select one from a list of strings (select exactly one)
+server.right.system.plugin.fylr_example.example_right.parm.string-list-one.option.a,Option A,Option A
+server.right.system.plugin.fylr_example.example_right.parm.string-list-one.option.b,Option B,Option B
+server.right.system.plugin.fylr_example.example_right.parm.string-list-one.option.c,Option C,Option C
+server.right.system.plugin.fylr_example.example_right.parm.string-list-one-or-zero,Auswahl aus Liste von Strings (oder keine Auswahl),Select one from a list of strings (or no selection)
+server.right.system.plugin.fylr_example.example_right.parm.string-list-one-or-zero.option.a,Option A,Option A
+server.right.system.plugin.fylr_example.example_right.parm.string-list-one-or-zero.option.b,Option B,Option B
+server.right.system.plugin.fylr_example.example_right.parm.string-list-one-or-zero.option.c,Option C,Option C
+server.right.system.plugin.fylr_example.example_right.parm.eas-column-select,Asset-Feld,Asset Field

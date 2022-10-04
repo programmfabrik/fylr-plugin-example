@@ -1,1 +1,4 @@
 /build
+webfrontend/FylrExample.js
+webfrontend/FylrExampleCustomDataType.coffee.js
+webfrontend/FylrExampleTransition.coffee.js
