@@ -4,8 +4,15 @@ help:
 
 # public targets
 
+FYLR_BUILD_DIR=fylr-build
+ZIP_NAME ?= $(PLUGIN_NAME).zip
+
 fylr: ## build for fylr
-	$(MAKE) BUILD_DIR=fylr-build/$(PLUGIN_NAME) buildcommon code
+	$(MAKE) BUILD_DIR=$(FYLR_BUILD_DIR)/$(PLUGIN_NAME) buildcommon code
+	$(MAKE) BUILD_DIR=$(FYLR_BUILD_DIR)/$(PLUGIN_NAME) WEB=webfrontend code populate-build
+
+zip: fylr ## build zip file for publishing
+	cd $(FYLR_BUILD_DIR) && zip $(ZIP_NAME) -r $(PLUGIN_NAME)
 
 build: ## build for easydb 5
 	$(MAKE) BUILD_DIR=build buildcommon code
@@ -52,6 +59,10 @@ build-stamp-l10n: $(L10N_FILES)
 %.coffee.js: %.coffee
 	coffee -b -p --compile "$^" > "$@" || ( rm -f "$@" ; false )
 
+$(JS): $(subst .coffee,.coffee.js,${COFFEE_FILES})
+	mkdir -p $(dir $@)
+	cat $^ > $@
+
 clean-base:
 	rm -f $(L10N) $(subst .coffee,.coffee.js,${COFFEE_FILES}) $(JS) $(SCSS)
 	rm -f $(subst .coffee,.coffee.js,${WEBHOOK_FILES}) $(WEBHOOK_JS)
@@ -77,6 +88,16 @@ install-files: ${INSTALL_FILES}
 
 # internal targets, fylr
 
+populate-build: $(patsubst %,$(BUILD_DIR)/%,$(INSTALL_FILES))
+
+fylr-build/$(PLUGIN_NAME)/%: %
+	mkdir -p $(dir $@)
+	if [ -d "$@" ]; then \
+		cp -Pr $< $(dir $@) ; \
+	else \
+		cp $< $@ ; \
+	fi
+
 # internal targets, easydb 5
 
 install-server:
@@ -85,6 +106,7 @@ install-server:
 build/webfrontend/%: src/webfrontend/%
 	mkdir -p $(dir $@)
 	cp $^ $@
+
 
 .PHONY: help all fylr build buildcommon buildinfojson code install-server install-files google_csv
 
