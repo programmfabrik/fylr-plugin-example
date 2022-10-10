@@ -5,7 +5,7 @@ import requests
 from urllib.parse import urlparse
 
 global access_token
-global tags_by_id
+global plugin_url
 
 
 def walkDict(data, path):
@@ -43,8 +43,8 @@ def parseMultilanguage(value, lang, fallback_lang='und'):
     return value
 
 
-def parseStandard(obj, lang):
-    standard = []
+def parseStandard(obj, lang, parse_eas=True):
+    standard = {}
 
     for i in range(3):
         k = '_standard.%d.text' % (i + 1)
@@ -56,7 +56,35 @@ def parseStandard(obj, lang):
         if value == '':
             continue
 
-        standard.append(value.replace('\n', '<br/>'))
+        standard[str(i + 1)] = value.replace('\n', '<br/>')
+
+    if not parse_eas:
+        return standard
+
+    eas = walkDict(obj, '_standard.eas')
+    if eas is None:
+        return standard
+    for k in eas:
+        if not isinstance(eas[k], list):
+            continue
+
+        found = False
+        for e in eas[k]:
+            preferred = walkDict(e, 'preferred')
+            if not isinstance(preferred, bool):
+                continue
+            if not preferred:
+                continue
+
+            url = walkDict(e, 'versions.preview.url')
+            if url is None:
+                continue
+
+            standard['EAS'] = '<img src="' + formatAssetUrl(url) + '"/>'
+            found = True
+
+        if found:
+            break
 
     return standard
 
@@ -67,32 +95,28 @@ def parsePath(obj, lang):
     if not isinstance(path, list) or len(path) < 2:
         return None
 
-    rendered = ''
+    values = []
 
     for i in range(len(path)):
-        s = parseStandard(path[i], lang)
-        value = ''
-        if len(s) > 0:
-            value = s[0]
+        standard = parseStandard(path[i], lang)
+        if isinstance(standard, dict):
+            # find the first standard key of 1, 2, 3 that has a value
+            for k in sorted(standard):
+                if i == len(path) - 1:
+                    values.append(standard[k])
+                    break
+                values.append(formatLinkedObjectHref(
+                    path[i],
+                    standard[k],
+                    lang,
+                    '_system_object_id'
+                ))
+                break
 
-        rendered += """
-            <ul>
-                <li>{value}
-        """.format(
-            value=value
-        )
-
-    for i in range(len(path)):
-        rendered += """
-                </li>
-            </ul>
-        """
-
-    return rendered
+    return ' &#x25B8 '.join(values)
 
 
 def parseTags(obj, lang):
-    global tags_by_id
 
     rendered = """
         <ul>
@@ -106,15 +130,16 @@ def parseTags(obj, lang):
         id = walkDict(tag, '_id')
         if id is None:
             continue
-        if id not in tags_by_id:
-            continue
-        value = parseMultilanguage(tags_by_id[id], lang)
-        if value is None:
-            continue
-        if value == '':
-            continue
 
-        rendered += """<li>""" + value + """</li>"""
+        values = []
+
+        displayname = walkDict(tag, 'displayname')
+        if isinstance(displayname, dict):
+            values.append(parseMultilanguage(displayname, lang))
+
+        values.append('[%d]' % id)
+
+        rendered += """<li>""" + ' '.join(values) + """</li>"""
 
     rendered += """
         </ul>
@@ -149,38 +174,40 @@ def renderValue(label, value, type, suffix='', nested_level=0):
     )
 
 
-def renderAsset(label, asset, suffix='', nested_level=0):
+def formatAssetUrl(image_url):
 
     global access_token
 
+    parsed = urlparse(image_url)
+
+    params = parsed.query
+    if params != '':
+        params += '&'
+    params += 'access_token=' + access_token
+
+    return """{prot}://{loc}{path}?{params}""".format(
+        prot=parsed.scheme,
+        loc=parsed.netloc,
+        path=parsed.path,
+        params=params
+    )
+
+
+def renderAsset(label, asset, suffix='', nested_level=0):
+
     rendered = ''
 
-    asset_version = 'preview'
-    image_url = walkDict(asset, 'versions.' + asset_version + '.url')
+    image_url = walkDict(asset, 'versions.preview.url')
     if image_url is None:
-        image_url = walkDict(asset, 'versions.' +
-                             asset_version + '.download_url')
+        image_url = walkDict(asset, 'versions.preview.download_url')
 
     if image_url is not None:
-        parsed = urlparse(image_url)
-
-        params = parsed.query
-        if params != '':
-            params += '&'
-        params += 'access_token=' + access_token
-
-        image_url = """{prot}://{loc}{path}?{params}""".format(
-            prot=parsed.scheme,
-            loc=parsed.netloc,
-            path=parsed.path,
-            params=params
-        )
-
         rendered += renderValue(
             label,
-            '<img src="' + image_url + '"/>',
+            '<img src="' + formatAssetUrl(image_url) + '"/>',
             'file',
-            nested_level=nested_level
+            nested_level=nested_level,
+            suffix=suffix
         )
 
     technical_metadata = walkDict(asset, 'technical_metadata')
@@ -205,6 +232,43 @@ def renderAsset(label, asset, suffix='', nested_level=0):
             )
 
     return rendered
+
+
+def formatLinkedObjectHref(sub_obj, standard, lang, key):
+    global access_token
+    global plugin_url
+
+    if plugin_url is None:
+        return standard
+
+    sys_id = walkDict(sub_obj, key)
+    if sys_id is None:
+        return standard
+
+    objecttype = walkDict(sub_obj, '_objecttype')
+    if objecttype is None:
+        return standard
+
+    params = {
+        'system_object_id': str(sys_id),
+        'objecttype': objecttype,
+        'mask': '_all_fields',
+        'language': lang,
+        'access_token': access_token,
+    }
+    params_str = '&'.join([
+        '{p}={v}'.format(
+            p=p,
+            v=params[p]
+        )
+        for p in params
+    ])
+
+    return """<a href="{url}?{params}">{standard}</a>""".format(
+        url=plugin_url,
+        standard=standard,
+        params=params_str
+    )
 
 
 def renderFieldRow(obj, key, label, lang, type, suffix='', nested_level=0):
@@ -237,6 +301,9 @@ def renderFieldRow(obj, key, label, lang, type, suffix='', nested_level=0):
         else:
             value = parseMultilanguage(value, lang)
 
+    if (nested_level > 0 and key == '_system_object_id') or key == '_system_object_id_parent':
+        value = formatLinkedObjectHref(obj, value, lang, key)
+
     return renderValue(
         label,
         value,
@@ -258,25 +325,35 @@ def renderSystemFieldRow(obj, key, label, lang, nested_level=0):
 
 
 def renderNestedTable(label, nested, lang, nested_level=0):
+    if len(nested) < 1:
+        return ''
+
     rendered = ''
 
-    for row_id in range(len(nested)):
-        row = nested[row_id]
-        rendered += renderValue(
-            label,
-            '',
-            'nested',
-            suffix=' ' + str(row_id + 1),
-            nested_level=nested_level
-        )
+    for entry_id in range(len(nested)):
+        entry = nested[entry_id]
 
-        for entry_id in range(len(row)):
-            entry = row[entry_id]
-            rendered += renderValueRow(
-                entry,
-                lang,
+        if len(entry) < 1:
+            continue
+
+        # do not render an indented nested table if the table row has only
+        single_row = len(entry) == 1
+        if not single_row:
+            rendered += renderValue(
+                label,
+                '',
+                'nested',
                 suffix=' ' + str(entry_id + 1),
-                nested_level=nested_level + 1
+                nested_level=nested_level
+            )
+
+        for row_id in range(len(entry)):
+            row = entry[row_id]
+            rendered += renderValueRow(
+                row,
+                lang,
+                suffix=('' if single_row else (' ' + str(row_id + 1))),
+                nested_level=nested_level + (0 if single_row else 1)
             )
 
     return rendered
@@ -295,7 +372,6 @@ def renderReverseNestedTable(label, nested, lang, nested_level=0):
         )
 
         subObj = nested[row_id]
-
         rendered += render_object(
             subObj,
             lang,
@@ -332,19 +408,26 @@ def renderValueRow(obj, lang, suffix='', nested_level=0):
         if not obj['type'] in obj:
             return ''
 
-        subObj = obj[obj['type']]
-        if not isinstance(subObj, dict):
+        sub_obj = obj[obj['type']]
+        if not isinstance(sub_obj, dict):
             return ''
 
-        value = parseStandard(subObj, lang)
-
-        return renderValue(
-            obj['display_name'],
-            '<br/>'.join(value),
-            'linked_object',
-            suffix=suffix,
-            nested_level=nested_level
-        )
+        value = parseStandard(sub_obj, lang, parse_eas=False)
+        if isinstance(value, dict):
+            # find the first standard key of 1, 2, 3 that has a value
+            for k in sorted(value):
+                return renderValue(
+                    obj['display_name'],
+                    formatLinkedObjectHref(
+                        sub_obj,
+                        value[k],
+                        lang,
+                        '_system_object_id'
+                    ),
+                    'linked_object',
+                    suffix=suffix,
+                    nested_level=nested_level
+                )
 
     if obj['type'] == 'file':
         if not obj['type'] in obj:
@@ -381,7 +464,10 @@ def render_object(obj, lang, nested_level=0):
     for f in [
         ('_objecttype_display_name', 'Objecttype'),
         ('_system_object_id', 'System ID'),
+        (objecttype + '._version', 'Version'),
+        ('_version', 'Version'),
         (objecttype + '._pool.pool.name', 'Pool'),
+        ('_pool.pool.name', 'Pool'),
         ('_mask_display_name', 'Mask'),
         ('_system_object_id_parent', 'Parent System ID'),
     ]:
@@ -403,13 +489,15 @@ def render_object(obj, lang, nested_level=0):
         )
 
     standard = parseStandard(obj, lang)
-    if isinstance(standard, list):
-        rendered += renderValue(
-            'Standard',
-            '<br/>'.join(standard),
-            'system',
-            nested_level=nested_level,
-        )
+    if isinstance(standard, dict):
+        # sort by 1, 2, 3
+        for k in sorted(standard):
+            rendered += renderValue(
+                'Standard ' + k,
+                standard[k],
+                'system',
+                nested_level=nested_level,
+            )
 
     tags = parseTags(obj, lang)
     if tags is not None:
@@ -441,12 +529,12 @@ if __name__ == '__main__':
     info_json = json.loads(sys.argv[1])
 
     # get the object id from the request query
-    obj_id = walkDict(info_json, 'request.query.id')
-    if not isinstance(obj_id, list) or len(obj_id) < 1:
+    system_object_id = walkDict(info_json, 'request.query.system_object_id')
+    if not isinstance(system_object_id, list) or len(system_object_id) < 1:
         sys.stderr.writelines(
-            ['invalid value for info.json.request.query.id'])
+            ['invalid value for info.json.request.query.system_object_id'])
         exit(1)
-    obj_id = obj_id[0]
+    system_object_id = system_object_id[0]
 
     # get the objecttype from the request query
     objecttype = walkDict(info_json, 'request.query.objecttype')
@@ -479,19 +567,26 @@ if __name__ == '__main__':
         lang = lang[0]
 
     # get the api url
-    url = walkDict(info_json, 'api_url')
-    if not isinstance(url, str):
+    api_url = walkDict(info_json, 'api_url')
+    if not isinstance(api_url, str):
         sys.stderr.writelines(
             ['invalid value for info.json.api_url'])
         exit(1)
 
+    # get the plugin url
+    pl_url = walkDict(info_json, 'request.url.Path')
+    if isinstance(pl_url, str):
+        plugin_url = pl_url
+    else:
+        plugin_url = None
+
     # load the object in format standard_extended using the db api
 
-    db_url = """{url}/api/v1/db/{objecttype}/{mask}/{obj_id}""".format(
-        url=url,
+    db_url = """{url}/api/v1/db/{objecttype}/{mask}/system_object_id/{system_object_id}""".format(
+        url=api_url,
         objecttype=objecttype,
         mask=mask,
-        obj_id=obj_id
+        system_object_id=system_object_id
     )
     url_params = {
         'format': 'standard_extended',
@@ -514,6 +609,7 @@ if __name__ == '__main__':
         exit(1)
 
     obj = json.loads(resp.text)
+
     if not isinstance(obj, list) or len(obj) < 1:
         sys.stderr.writelines([
             'call to api/v1/db returned invalid object list',
@@ -523,38 +619,6 @@ if __name__ == '__main__':
         print(db_url + '?format=' +
               url_params['format'] + '&access_token=' + url_params['access_token'])
         exit(1)
-
-    # load tags to display them if needed
-    tag_url = """{url}/api/v1/tags""".format(
-        url=url,
-    )
-    url_params = {
-        'access_token': access_token,
-    }
-
-    resp = requests.get(
-        url=tag_url,
-        params=url_params
-    )
-
-    tags_by_id = {}
-    if resp.status_code == 200:
-        taggroups = json.loads(resp.text)
-        if isinstance(taggroups, list):
-            for taggroup in taggroups:
-                tags = walkDict(taggroup, '_tags')
-                if not isinstance(tags, list):
-                    continue
-
-                for tag in tags:
-                    id = walkDict(tag, 'tag._id')
-                    if id is None:
-                        continue
-                    name = walkDict(tag, 'tag.displayname')
-                    if name is None:
-                        continue
-
-                    tags_by_id[id] = name
 
     # generate html that is printed to stdout to be displayed in the browser
 

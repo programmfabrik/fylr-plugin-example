@@ -9,12 +9,6 @@ class DetailSidebarRender extends DetailSidebarPlugin
 	getButtonLocaKey: ->
 		"example.detail.sidebar.plugin.render_object"
 
-	render: ->
-		console.info("DetailSidebarRender.render():", @_detailSidebar)
-
-	renderObject: ->
-		console.info("DetailSidebarRender.renderObject():", @_detailSidebar, @__currentObject)
-
 	isAvailable: ->
 		true
 
@@ -25,19 +19,16 @@ class DetailSidebarRender extends DetailSidebarPlugin
 		objData = @_detailSidebar.object.getData()
 
 		render_endpoint = "api/v1/plugin/base/fylr_example/render/standard_extended"
-		console.debug("render_endpoint",render_endpoint)
 
 		form = document.createElement("form")
 		form.action = render_endpoint
 		form.target = "_blank"
 		form.method = "GET"
 
-		console.debug("form",form)
-
 		param_id = document.createElement("input")
 		param_id.type = "hidden"
-		param_id.name = "id"
-		param_id.value = objData[objData._objecttype]._id
+		param_id.name = "system_object_id"
+		param_id.value = objData._system_object_id
 		form.appendChild(param_id)
 
 		param_objecttype = document.createElement("input")
@@ -63,8 +54,6 @@ class DetailSidebarRender extends DetailSidebarPlugin
 		param_token.name = "access_token"
 		param_token.value = ez5.session.token
 		form.appendChild(param_token)
-
-		console.debug("form",form)
 
 		document.body.appendChild(form)
 

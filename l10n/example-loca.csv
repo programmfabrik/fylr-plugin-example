@@ -8,7 +8,8 @@ server.config.name.system.custom,Eigene Daten,Custom data
 server.config.parameter.system.custom.data.label,-,-
 server.config.parameter.system.custom.on_off.label,-,-
 server.config.parameter.system.custom.on_off.checkbox,Checkbox,Checkbox
-example.detail.sidebar.plugin.render_object|text,Example Plugin: Objekt rendern,Example Plugin: render object
+example.detail.sidebar.plugin.render_object|icon,fa-cubes,fa-cubes
+example.detail.sidebar.plugin.render_object|hint,Example Plugin: Objekt rendern,Example Plugin: render object
 server.right.system.plugin.fylr_example.example_right,FYLR Example Plugin: Mögliche Werte um Rechte an Plugins zu steuern,FYLR Example Plugin: Possible values for rights on plugins
 server.right.system.plugin.fylr_example.example_right.parm.bool,Ja/Nein (Boolescher Wert),Yes/No (Boolean)
 server.right.system.plugin.fylr_example.example_right.parm.int,Zahlenfeld,Number
