@@ -16,54 +16,43 @@ class DetailSidebarRender extends DetailSidebarPlugin
 		@_detailSidebar.mainPane.empty("top")
 
 	showDetail: ->
+
+		#We add a loading label with a spinner.
+		@_detailSidebar.mainPane.replace(
+			new CUI.Label
+				icon: "spinner"
+				text: "example.detail.sidebar.plugin.render_object.loading_label"
+				size: "big"
+				centered: true
+		, "top")
+
 		objData = @_detailSidebar.object.getData()
+		#We create a XHR to get the server html data.
+		xhr = new CUI.XHR
+			method: 'GET'
+			url: "api/v1/plugin/base/fylr_example/render/standard_extended"
+			url_data:
+				system_object_id: objData._system_object_id
+				objecttype: objData._objecttype
+				mask: objData._mask
+				language: ez5.session.frontend_language
+				access_token: ez5.session.token
+			responseType: "text"
+		.start()
+		.done (response) =>
+			#When the XHR is resolved we create a Iframe with the retreived html and append it to the detail.
+			iframe = CUI.dom.$element("iframe", "extended-standard-view")
+			@_detailSidebar.mainPane.replace([
+				iframe
+			], "top")
+			CUI.dom.setStyle(iframe,
+				height: "100%"
+			)
+			iframe.contentWindow.document.open();
+			iframe.contentWindow.document.write(response);
+			iframe.contentWindow.document.close();
 
-		render_endpoint = "api/v1/plugin/base/fylr_example/render/standard_extended"
-
-		form = document.createElement("form")
-		form.action = render_endpoint
-		form.target = "_blank"
-		form.method = "GET"
-
-		param_id = document.createElement("input")
-		param_id.type = "hidden"
-		param_id.name = "system_object_id"
-		param_id.value = objData._system_object_id
-		form.appendChild(param_id)
-
-		param_objecttype = document.createElement("input")
-		param_objecttype.type = "hidden"
-		param_objecttype.name = "objecttype"
-		param_objecttype.value = objData._objecttype
-		form.appendChild(param_objecttype)
-
-		param_mask = document.createElement("input")
-		param_mask.type = "hidden"
-		param_mask.name = "mask"
-		param_mask.value = objData._mask
-		form.appendChild(param_mask)
-
-		param_language = document.createElement("input")
-		param_language.type = "hidden"
-		param_language.name = "language"
-		param_language.value = ez5.session.frontend_language
-		form.appendChild(param_language)
-
-		param_token = document.createElement("input")
-		param_token.type = "hidden"
-		param_token.name = "access_token"
-		param_token.value = ez5.session.token
-		form.appendChild(param_token)
-
-		document.body.appendChild(form)
-
-		@_detailSidebar.mainPane.replace([
-			new CUI.Button
-				text: "Render object in standard_extended format"
-				onClick: =>
-					form.submit()
-		], "top")
-		@
+		return @
 
 
 ez5.session_ready =>
