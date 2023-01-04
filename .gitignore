@@ -1,2 +1,5 @@
-
-fylr_example.zip
+/build
+webfrontend/FylrExample.js
+webfrontend/FylrExampleCustomDataType.coffee.js
+webfrontend/FylrExampleTransition.coffee.js
+webfrontend/ExampleDetailSidebarPlugin.coffee.js

@@ -6,7 +6,7 @@ recipes:
     execs:
       - match: {}
         service: convert
-        timeoutmsec: 0
+        timeoutSec: 0
         extension: "jpg"
         commands:
           - prog: convert
@@ -28,7 +28,7 @@ recipes:
     execs:
       - match: {}
         service: python3
-        timeoutmsec: 0
+        timeoutSec: 0
         extension: "jpg"
         commands:
           - prog: python3

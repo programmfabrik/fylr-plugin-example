@@ -4,7 +4,7 @@ plugin:
   l10n: l10n/example-loca.csv
   webfrontend:
     url: FylrExample.js
-    css: FyleExample.css
+    css: FylrExample.css
     html: FylrExample.html
   custom:
     henk: denk
@@ -203,15 +203,25 @@ callbacks:
           objecttypes:
             - object
             - objects
-      - name: "write event with info about inserted and updated objects"
-        callback: write_event
+      - name: "bounce json back for 'bounce'"
+        callback: bounce
         filter:
           type: objecttype
           objecttypes:
-            - object
-            - objects
-            - images
+            - bounce
     callbacks:
+      bounce:
+        exec:
+          service: "node"
+          commands:
+            - prog: "node"
+              stdin:
+                type: body
+              stdout:
+                type: body
+              args:
+                - type: "value"
+                  value: "%_exec.pluginDir%/server/db_pre_save+webhook/cat.js"
       set_comment:
         exec:
           service: "node"
@@ -321,8 +331,11 @@ custom_types:
       expires_days: 1
 
 fas_config:
-  produce_config: custom_produce.yml
+  produce_config: fas_config/custom_produce.yml
   cookbooks:
-    - cookbook_metadata_example.yml
-    - cookbook_metadata_pdf2text.yml
-    - cookbook_grayscale.yml
+    - fas_config/cookbook_metadata_example.yml
+    - fas_config/cookbook_metadata_pdf2text.yml
+    - fas_config/cookbook_grayscale.yml
+
+custom_events:
+  FYLR_EXAMPLE_EVENT: {}
