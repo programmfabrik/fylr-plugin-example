@@ -18,7 +18,7 @@ process.stdin.on('data', d => {
 process.stdin.on('end', () => {
     let data;
     try {
-        fs.writeFileSync('/tmp/post-data', input);
+        // fs.writeFileSync('/tmp/post-data', input);
         data = JSON.parse(input);
         if (!data.info) {
             data.info = {}
