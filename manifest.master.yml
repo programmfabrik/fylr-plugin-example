@@ -203,6 +203,14 @@ callbacks:
           objecttypes:
             - object
             - objects
+      - name: "write event with info about inserted and updated objects"
+        callback: write_event
+        filter:
+          type: objecttype
+          objecttypes:
+            - object
+            - objects
+            - images
       - name: "bounce json back for 'bounce'"
         callback: bounce
         filter:
