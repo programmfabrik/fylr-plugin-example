@@ -1,6 +1,7 @@
 COFFEE_FILES = \
 	webfrontend/FylrExampleCustomDataType.coffee \
 	webfrontend/ExampleDetailSidebarPlugin.coffee \
+	webfrontend/FylrExampleCustomDatamodelSettings.coffee \
 	webfrontend/FylrExampleTransition.coffee
 
 JS = webfrontend/FylrExample.js
