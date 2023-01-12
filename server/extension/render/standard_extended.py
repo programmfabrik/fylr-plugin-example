@@ -626,7 +626,9 @@ if __name__ == '__main__':
         <head>
             <link rel="stylesheet" href="/api/v1/plugin/static/base/fylr_example/dump.css"/>
         </head>
-
+        <header>
+            Here is the header
+        </header>
         <body>
 
             <table class="object">

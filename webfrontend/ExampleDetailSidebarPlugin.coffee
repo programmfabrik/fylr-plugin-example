@@ -41,7 +41,7 @@ class DetailSidebarRender extends DetailSidebarPlugin
 		for optName, optValue of opts
 			baseUrl+= "#{optName}=#{optValue}&"
 
-		window.open(baseUrl, '_blank').focus();
+		window.open(baseUrl,"", "width=640, height=800").focus();
 
 
 ez5.session_ready =>
