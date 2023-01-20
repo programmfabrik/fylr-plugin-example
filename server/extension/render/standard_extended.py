@@ -454,6 +454,14 @@ def renderValueRow(obj, lang, suffix='', nested_level=0):
     )
 
 
+def render_object_header(obj, lang):
+    standard = parseStandard(obj, lang)
+    if '1' in standard:
+        return '#{0} - {1}'.format(obj['_system_object_id'], standard['1'])
+
+    return '#{0}'.format(obj['_system_object_id'])
+
+
 def render_object(obj, lang, nested_level=0):
 
     objecttype = obj['_objecttype']
@@ -625,14 +633,15 @@ if __name__ == '__main__':
     print("""
         <head>
             <link rel="stylesheet" href="/api/v1/plugin/static/base/fylr_example/dump.css"/>
+            <title>{header}</title>
         </head>
-        <header>
-            Here is the header
-        </header>
+
+        <header>{header}</header>
+
         <body>
 
             <table class="object">
-    """)
+    """.format(header=render_object_header(obj[0], lang)))
 
     print(render_object(obj[0], lang))
 
