@@ -221,19 +221,25 @@ def renderAsset(label, asset, suffix='', nested_level=0):
             suffix=suffix
         )
 
+    # fixed keys in every asset object
+    for c in [
+        ('_id', 'ID'),
+        ('original_filename', 'Original Filename'),
+        ('class_extension', 'Class and Extension'),
+    ]:
+        if c[0] not in asset:
+            continue
+        rendered += renderValue(
+            c[1],
+            asset[c[0]],
+            'text',
+            nested_level=nested_level + 1
+        )
+
     technical_metadata = walkDict(asset, 'technical_metadata')
     if isinstance(technical_metadata, dict):
         for tm_label in technical_metadata:
             value = technical_metadata[tm_label]
-
-            if tm_label == 'blurhash_img':
-                rendered += renderValue(
-                    tm_label,
-                    value,
-                    'text',
-                    nested_level=nested_level + 1
-                )
-                continue
 
             rendered += renderValue(
                 tm_label,
