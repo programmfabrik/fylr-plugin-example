@@ -635,11 +635,8 @@ if __name__ == '__main__':
             <link rel="stylesheet" href="/api/v1/plugin/static/base/fylr_example/dump.css"/>
             <title>{header}</title>
         </head>
-
-        <header>{header}</header>
-
         <body>
-
+            <h1>{header}</h1r>
             <table class="object">
     """.format(header=render_object_header(obj[0], lang)))
 
