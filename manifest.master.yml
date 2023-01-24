@@ -99,6 +99,21 @@ extensions:
             - type: "value"
               value: "%info.json%"
 
+  render/standard_extended:
+    exec:
+      service: "python3"
+      commands:
+        - prog: "python3"
+          stdin:
+            type: "body"
+          stdout:
+            type: "body"
+          args:
+            - type: "value"
+              value: "%_exec.pluginDir%/server/extension/render/standard_extended.py"
+            - type: "value"
+              value: "%info.json%"
+
 callbacks:
   export_transport:
     copy_file:
