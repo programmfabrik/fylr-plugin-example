@@ -3,6 +3,7 @@ from os import path
 import sys
 import requests
 from urllib.parse import urlparse
+import html
 
 global access_token
 global plugin_url
@@ -56,7 +57,7 @@ def parseStandard(obj, lang, parse_eas=True):
         if value == '':
             continue
 
-        standard[str(i + 1)] = value.replace('\n', '<br/>')
+        standard[str(i + 1)] = value
 
     if not parse_eas:
         return standard
@@ -80,7 +81,7 @@ def parseStandard(obj, lang, parse_eas=True):
             if url is None:
                 continue
 
-            standard['EAS'] = '<img src="' + formatAssetUrl(url) + '"/>'
+            standard['EAS'] = '<img width="100" src="' + formatAssetUrl(url) + '"/>'
             found = True
 
         if found:
@@ -102,12 +103,16 @@ def parsePath(obj, lang):
         if isinstance(standard, dict):
             # find the first standard key of 1, 2, 3 that has a value
             for k in sorted(standard):
+                s = standard[k]
+                if k in ['1', '2', '3']:
+                    s = html.escape(s)
+
                 if i == len(path) - 1:
-                    values.append(standard[k])
+                    values.append(s)
                     break
                 values.append(formatLinkedObjectHref(
                     path[i],
-                    standard[k],
+                    s,
                     lang,
                     '_system_object_id'
                 ))
@@ -135,7 +140,7 @@ def parseTags(obj, lang):
 
         displayname = walkDict(tag, 'displayname')
         if isinstance(displayname, dict):
-            values.append(parseMultilanguage(displayname, lang))
+            values.append(html.escape(parseMultilanguage(displayname, lang)))
 
         values.append('[%d]' % id)
 
@@ -157,6 +162,12 @@ def renderValue(label, value, type, suffix='', nested_level=0):
         try:
             value = '<pre>' + json.dumps(value, indent=4) + '</pre>'
         except Exception as e:
+            pass
+    elif type in ['text', 'text_loca']:
+        try:
+            v = html.escape(value)
+            value = v
+        except:
             pass
 
     return """
@@ -204,7 +215,7 @@ def renderAsset(label, asset, suffix='', nested_level=0):
     if image_url is not None:
         rendered += renderValue(
             label,
-            '<img src="' + formatAssetUrl(image_url) + '"/>',
+            '<img width="100" src="' + formatAssetUrl(image_url) + '"/>',
             'file',
             nested_level=nested_level,
             suffix=suffix
@@ -218,7 +229,7 @@ def renderAsset(label, asset, suffix='', nested_level=0):
             if tm_label == 'blurhash_img':
                 rendered += renderValue(
                     tm_label,
-                    '<img src="' + value + '"/><br/><div class="text">' + value + '</div>',
+                    value,
                     'text',
                     nested_level=nested_level + 1
                 )
@@ -303,6 +314,10 @@ def renderFieldRow(obj, key, label, lang, type, suffix='', nested_level=0):
 
     if (nested_level > 0 and key == '_system_object_id') or key == '_system_object_id_parent':
         value = formatLinkedObjectHref(obj, value, lang, key)
+
+    # special fields that need html escaping
+    if key.endswith('._pool.pool.name'):
+        value = html.escape(value)
 
     return renderValue(
         label,
@@ -457,7 +472,7 @@ def renderValueRow(obj, lang, suffix='', nested_level=0):
 def render_object_header(obj, lang):
     standard = parseStandard(obj, lang)
     if '1' in standard:
-        return '#{0} - {1}'.format(obj['_system_object_id'], standard['1'])
+        return '#{0} - {1}'.format(obj['_system_object_id'], html.escape(standard['1']))
 
     return '#{0}'.format(obj['_system_object_id'])
 
@@ -475,7 +490,6 @@ def render_object(obj, lang, nested_level=0):
         (objecttype + '._version', 'Version'),
         ('_version', 'Version'),
         (objecttype + '._pool.pool.name', 'Pool'),
-        ('_pool.pool.name', 'Pool'),
         ('_mask_display_name', 'Mask'),
         ('_system_object_id_parent', 'Parent System ID'),
     ]:
@@ -500,9 +514,13 @@ def render_object(obj, lang, nested_level=0):
     if isinstance(standard, dict):
         # sort by 1, 2, 3
         for k in sorted(standard):
+            s = standard[k]
+            if k in ['1', '2', '3']:
+                s = html.escape(s)
+
             rendered += renderValue(
                 'Standard ' + k,
-                standard[k],
+                s,
                 'system',
                 nested_level=nested_level,
             )
@@ -636,7 +654,7 @@ if __name__ == '__main__':
             <title>{header}</title>
         </head>
         <body>
-            <h1>{header}</h1r>
+            <h1>{header}</h1>
             <table class="object">
     """.format(header=render_object_header(obj[0], lang)))
 
