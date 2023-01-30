@@ -28,6 +28,17 @@ extensions:
             - type: "value"
               value: "%_exec.pluginDir%/server/extension/empty.js"
 
+  dump/empty2:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdin:
+            type: "body"
+          args:
+            - type: "value"
+              value: "%_exec.pluginDir%/server/extension/empty.js"
+
   dump/sleep:
     exec:
       service: "python"
@@ -66,6 +77,32 @@ extensions:
           args:
             - type: "value"
               value: "%_exec.pluginDir%/server/extension/error.js"
+
+  dump/error2:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdin:
+            type: "body"
+          stdout:
+            type: "body"
+          args:
+            - type: "value"
+              value: "%_exec.pluginDir%/server/extension/error2.js"
+
+  dump/error3:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdin:
+            type: "body"
+          stdout:
+            type: "body"
+          args:
+            - type: "value"
+              value: "%_exec.pluginDir%/server/extension/error3.js"
 
   dump/file:
     exec:
