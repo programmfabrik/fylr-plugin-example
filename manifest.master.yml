@@ -136,6 +136,19 @@ extensions:
             - type: "value"
               value: "%info.json%"
 
+  webhook/check:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdin:
+            type: "body"
+          stdout:
+            type: "body"
+          args:
+            - type: "value"
+              value: "%_exec.pluginDir%/server/db_pre_save+webhook/check.js"
+
   render/standard_extended:
     exec:
       service: "python3"
@@ -245,6 +258,18 @@ callbacks:
             args:
               - type: "value"
                 value: "%_exec.pluginDir%/server/db_pre_save+webhook/set_comment.js"
+    check:
+      exec:
+        service: "node"
+        commands:
+          - prog: "node"
+            stdin:
+              type: body
+            stdout:
+              type: body
+            args:
+              - type: "value"
+                value: "%_exec.pluginDir%/server/db_pre_save+webhook/check.js"
 
   db_pre_save:
     steps:
@@ -261,6 +286,13 @@ callbacks:
           type: objecttype
           objecttypes:
             - bounce
+      - name: "check 'name' field"
+        callback: check
+        filter:
+          type: objecttype
+          objecttypes:
+            - photographer
+
     callbacks:
       bounce:
         exec:
@@ -286,6 +318,18 @@ callbacks:
               args:
                 - type: "value"
                   value: "%_exec.pluginDir%/server/db_pre_save+webhook/set_comment.js"
+      check:
+        exec:
+          service: "node"
+          commands:
+            - prog: "node"
+              stdin:
+                type: body
+              stdout:
+                type: body
+              args:
+                - type: "value"
+                  value: "%_exec.pluginDir%/server/db_pre_save+webhook/check.js"
 
 base_config:
   - name: comment
