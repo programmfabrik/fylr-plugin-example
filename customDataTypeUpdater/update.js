@@ -25,6 +25,12 @@ main = (payload) => {
                 payload.objects[i].data.version++
                 console.error("data", i, payload.objects[i].data.numberfield)
             }
+            // add a dup, so fylr learns how to de dup the data
+            if (payload.objects.length > 2) {
+                let id = payload.objects[0].identifier
+                payload.objects[0] = JSON.parse(JSON.stringify(payload.objects[1]))
+                payload.objects[0].identifier = id
+            }
             outputData({
                 "payload": payload.objects,
                 "log": [payload.objects.length+" objects in payload"]
