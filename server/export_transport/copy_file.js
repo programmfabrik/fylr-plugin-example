@@ -70,7 +70,6 @@ const sendDataToURL = async (url, data) => {
 }
 
 (async() => {
-
     if (tOpts.url) {
         await sendDataToURL(tOpts.url, JSON.stringify(info));
         tLog.push(`data sent: ${tOpts.url}`)
@@ -79,7 +78,9 @@ const sendDataToURL = async (url, data) => {
         fs.writeFileSync(tOpts.file, JSON.stringify(info,"","    "));
         tLog.push(`file written: ${tOpts.file}`)
     }
-
+    if (tOpts["pw:secret"]) {
+        tLog.push(`pw:secret: `+ tOpts["pw:secret"])
+    }
     // write back modified export json
     console.log(JSON.stringify({
         "_state": "done",
