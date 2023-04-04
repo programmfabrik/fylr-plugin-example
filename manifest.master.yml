@@ -28,6 +28,17 @@ extensions:
             - type: "value"
               value: "%_exec.pluginDir%/server/extension/empty.js"
 
+  dump/empty2:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdin:
+            type: "body"
+          args:
+            - type: "value"
+              value: "%_exec.pluginDir%/server/extension/empty.js"
+
   dump/sleep:
     exec:
       service: "python"
@@ -67,6 +78,32 @@ extensions:
             - type: "value"
               value: "%_exec.pluginDir%/server/extension/error.js"
 
+  dump/error2:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdin:
+            type: "body"
+          stdout:
+            type: "body"
+          args:
+            - type: "value"
+              value: "%_exec.pluginDir%/server/extension/error2.js"
+
+  dump/error3:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdin:
+            type: "body"
+          stdout:
+            type: "body"
+          args:
+            - type: "value"
+              value: "%_exec.pluginDir%/server/extension/error3.js"
+
   dump/file:
     exec:
       service: "node"
@@ -96,6 +133,34 @@ extensions:
           args:
             - type: "value"
               value: "%_exec.pluginDir%/server/db_pre_save+webhook/set_comment.js"
+            - type: "value"
+              value: "%info.json%"
+
+  webhook/check:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdin:
+            type: "body"
+          stdout:
+            type: "body"
+          args:
+            - type: "value"
+              value: "%_exec.pluginDir%/server/db_pre_save+webhook/check.js"
+
+  render/standard_extended:
+    exec:
+      service: "python3"
+      commands:
+        - prog: "python3"
+          stdin:
+            type: "body"
+          stdout:
+            type: "body"
+          args:
+            - type: "value"
+              value: "%_exec.pluginDir%/server/extension/render/standard_extended.py"
             - type: "value"
               value: "%info.json%"
 
@@ -193,6 +258,18 @@ callbacks:
             args:
               - type: "value"
                 value: "%_exec.pluginDir%/server/db_pre_save+webhook/set_comment.js"
+    check:
+      exec:
+        service: "node"
+        commands:
+          - prog: "node"
+            stdin:
+              type: body
+            stdout:
+              type: body
+            args:
+              - type: "value"
+                value: "%_exec.pluginDir%/server/db_pre_save+webhook/check.js"
 
   db_pre_save:
     steps:
@@ -217,6 +294,13 @@ callbacks:
           type: objecttype
           objecttypes:
             - bounce
+      - name: "check 'name' field"
+        callback: check
+        filter:
+          type: objecttype
+          objecttypes:
+            - photographer
+
     callbacks:
       bounce:
         exec:
@@ -256,6 +340,18 @@ callbacks:
               args:
                 - type: value
                   value: "%_exec.pluginDir%/server/db_pre_save+write_event/write_event.py"
+      check:
+        exec:
+          service: "node"
+          commands:
+            - prog: "node"
+              stdin:
+                type: body
+              stdout:
+                type: body
+              args:
+                - type: "value"
+                  value: "%_exec.pluginDir%/server/db_pre_save+webhook/check.js"
 
 base_config:
   - name: comment
@@ -309,6 +405,8 @@ custom_types:
         type: number
       locafield:
         type: text_l10n
+      doublefield:
+        type: double
     config:
       schema:
         - name: fylr_example_config
