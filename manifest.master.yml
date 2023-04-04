@@ -445,3 +445,4 @@ fas_config:
 
 custom_events:
   FYLR_EXAMPLE_EVENT: {}
+  EXAMPLE_PLUGIN_OBJECT_STATISTICS: {}
