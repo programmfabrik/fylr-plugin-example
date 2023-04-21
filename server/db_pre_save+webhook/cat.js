@@ -1,4 +1,5 @@
 // cat.js reads json from stdin and bounces it back to stdout
+// const fs = require('fs');
 
 let input = ''
 process.stdin.on('data', d => {
@@ -19,5 +20,6 @@ process.stdin.on('end', () => {
         console.error(`Could not parse input: ${e.message}`, e.stack)
         process.exit(1)
     }
+    // fs.writeFileSync('/tmp/post-req', JSON.stringify(data));
     console.log(JSON.stringify(data, "", "    "))
 })

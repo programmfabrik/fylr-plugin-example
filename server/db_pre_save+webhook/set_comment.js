@@ -31,11 +31,11 @@ process.stdin.on('end', () => {
     var comment = undefined
     if (info) {
         // Set from the command line for the extension plugin (webhook)
-        comment = (info.request && info.request.query && info.request.query.comment)
+        comment = info.request?.query?.comment
     } else {
         // Set directly from the request (like transition/db_pre_save)
         // fs.writeFileSync('/tmp/post-req', JSON.stringify(data.info.request));
-        comment = (data.info.request && data.info.request.query && data.info.request.query.comment) || data.info.comment
+        comment = data.info.request?.query?.comment || data.info.comment
     }
 
     // set object.col_a if unset (used in test/api/plugin/not_null)
@@ -62,7 +62,7 @@ process.stdin.on('end', () => {
 
     // add more info from the config value
     try {
-        if (data.info && data.info.config && data.info.config.plugin && data.info.config.plugin.fylr_example.config.comment.value) {
+        if (data.info?.config?.plugin?.fylr_example.config.comment.value) {
             comment = comment + " " + data.info.config.plugin.fylr_example.config.comment.value
         }
 
@@ -74,10 +74,14 @@ process.stdin.on('end', () => {
             } else {
                 console.error("Adding comment to object", obj._uuid, obj[obj._objecttype]._version)
             }
+            let app = " #"+idx
+            if (obj._callback_context?.original_mask) {
+                app += " mask: "+obj._callback_context.original_mask
+            }
             if (obj._comment) {
-                obj._comment = obj._comment+" "+comment+" #"+idx
+                obj._comment = obj._comment+" "+comment+app
             } else {
-                obj._comment = comment+" #"+idx
+                obj._comment = comment+app
             }
             // remove the _current
             delete(obj._current)
