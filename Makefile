@@ -20,7 +20,12 @@ build: clean code ## build all (creates build folder)
 	mkdir -p $(BUILD_DIR)/$(PLUGIN_NAME)/webfrontend
 	cp -r $(JS) webfrontend/FylrExample.html webfrontend/*.css $(BUILD_DIR)/$(PLUGIN_NAME)/webfrontend
 
-code: $(JS) ## build Coffeescript code
+code: $(JS) go ## build Coffeescript + Go code
+
+go:
+	GOOS=linux go build -o server/extension/hello/hello-linux.exe server/extension/hello/main.go
+	GOOS=windows go build -o server/extension/hello/hello-windows.exe server/extension/hello/main.go
+	GOOS=darwin GOARCH=amd64 go build -o server/extension/hello/hello-darwin.exe server/extension/hello/main.go
 
 zip: build ## build zip file for publishing
 	cd $(BUILD_DIR) && zip $(ZIP_NAME) -r $(PLUGIN_NAME)
