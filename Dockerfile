@@ -1,5 +1,7 @@
 FROM docker.fylr.io/fylr-priv/fylr-server-docker-dependencies:latest
 
+FROM golang:1.20-alpine AS build
+
 LABEL maintainer="Leon Steinhäuser <leon.steinhaeuser@fylr.io>"
 
 RUN apk update && \
