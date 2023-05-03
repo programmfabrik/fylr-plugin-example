@@ -23,9 +23,7 @@ build: clean code ## build all (creates build folder)
 code: $(JS) go ## build Coffeescript + Go code
 
 go:
-	GOOS=linux go build -o server/extension/hello/hello-linux.exe server/extension/hello/main.go
-	GOOS=windows go build -o server/extension/hello/hello-windows.exe server/extension/hello/main.go
-	GOOS=darwin GOARCH=amd64 go build -o server/extension/hello/hello-darwin.exe server/extension/hello/main.go
+	$(MAKE) -C server/extension/hello build
 
 zip: build ## build zip file for publishing
 	cd $(BUILD_DIR) && zip $(ZIP_NAME) -r $(PLUGIN_NAME)
@@ -33,6 +31,7 @@ zip: build ## build zip file for publishing
 clean: ## clean build files
 	rm -f $(JS)
 	rm -rf $(BUILD_DIR)
+	$(MAKE) -C server/extension/hello clean
 
 ${JS}: $(subst .coffee,.coffee.js,${COFFEE_FILES})
 	mkdir -p $(dir $@)
