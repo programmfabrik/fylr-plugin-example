@@ -437,4 +437,5 @@ fas_config:
     - fas_config/cookbook_grayscale.yml
 
 custom_events:
-  FYLR_EXAMPLE_EVENT: {}
+  FYLR_EXAMPLE_EVENT:
+    user: true
