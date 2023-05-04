@@ -78,6 +78,21 @@ extensions:
             - type: "value"
               value: "%_exec.pluginDir%/server/extension/error.js"
 
+  dump/hello:
+    exec:
+      service: "exec"
+      commands:
+        - prog: "%_exec.pluginDir%/server/extension/hello/hello-%_exec.GOOS%.exe"
+          stdin:
+            type: "body"
+          stdout:
+            type: "body"
+          args:
+            - type: "value"
+              value: "World !"
+            - type: "value"
+              value: "%info.json%"
+
   dump/error2:
     exec:
       service: "node"
@@ -444,5 +459,7 @@ fas_config:
     - fas_config/cookbook_grayscale.yml
 
 custom_events:
-  FYLR_EXAMPLE_EVENT: {}
-  EXAMPLE_PLUGIN_OBJECT_STATISTICS: {}
+  EXAMPLE_PLUGIN_OBJECT_STATISTICS:
+    user: true
+  FYLR_EXAMPLE_EVENT:
+    user: true

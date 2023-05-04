@@ -20,7 +20,10 @@ build: clean code ## build all (creates build folder)
 	mkdir -p $(BUILD_DIR)/$(PLUGIN_NAME)/webfrontend
 	cp -r $(JS) webfrontend/FylrExample.html webfrontend/*.css $(BUILD_DIR)/$(PLUGIN_NAME)/webfrontend
 
-code: $(JS) ## build Coffeescript code
+code: $(JS) go ## build Coffeescript + Go code
+
+go:
+	$(MAKE) -C server/extension/hello build
 
 zip: build ## build zip file for publishing
 	cd $(BUILD_DIR) && zip $(ZIP_NAME) -r $(PLUGIN_NAME)
@@ -28,6 +31,7 @@ zip: build ## build zip file for publishing
 clean: ## clean build files
 	rm -f $(JS)
 	rm -rf $(BUILD_DIR)
+	$(MAKE) -C server/extension/hello clean
 
 ${JS}: $(subst .coffee,.coffee.js,${COFFEE_FILES})
 	mkdir -p $(dir $@)
