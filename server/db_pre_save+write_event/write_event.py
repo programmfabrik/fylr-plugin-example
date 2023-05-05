@@ -52,7 +52,7 @@ def main():
     for objecttype in objecttype_count:
         util.post_to_api(
             api_url=api_url,
-            path='event',
+            path='event?background=1',
             access_token=access_token,
             payload=util.dumpjs({
                 'event': {
