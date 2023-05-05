@@ -295,6 +295,14 @@ callbacks:
           objecttypes:
             - object
             - objects
+      - name: "write event with info about inserted and updated objects"
+        callback: write_event
+        filter:
+          type: objecttype
+          objecttypes:
+            - object
+            - objects
+            - images
       - name: "bounce json back for 'bounce'"
         callback: bounce
         filter:
@@ -333,6 +341,20 @@ callbacks:
               args:
                 - type: "value"
                   value: "%_exec.pluginDir%/server/db_pre_save+webhook/set_comment.js"
+      write_event:
+        exec:
+          service: python3
+          commands:
+            - prog: python3
+              stdin:
+                type: body
+              stderr:
+                type: body
+              stdout:
+                type: body
+              args:
+                - type: value
+                  value: "%_exec.pluginDir%/server/db_pre_save+write_event/write_event.py"
       check:
         exec:
           service: "node"
@@ -437,5 +459,7 @@ fas_config:
     - fas_config/cookbook_grayscale.yml
 
 custom_events:
+  EXAMPLE_PLUGIN_OBJECT_STATISTICS:
+    user: true
   FYLR_EXAMPLE_EVENT:
     user: true
