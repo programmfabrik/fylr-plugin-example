@@ -13,6 +13,8 @@ BUILD_DIR = build
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
+all: build ## build all
+
 build: clean code ## build all (creates build folder)
 	mkdir -p $(BUILD_DIR)/$(PLUGIN_NAME)
 	cp manifest.master.yml $(BUILD_DIR)/$(PLUGIN_NAME)/manifest.yml
