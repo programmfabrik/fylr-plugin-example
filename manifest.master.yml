@@ -300,9 +300,7 @@ callbacks:
         filter:
           type: objecttype
           objecttypes:
-            - object
-            - objects
-            - images
+            - write_event
       - name: "bounce json back for 'bounce'"
         callback: bounce
         filter:

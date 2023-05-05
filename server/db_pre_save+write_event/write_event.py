@@ -63,7 +63,7 @@ def main():
             })
         )
 
-    util.return_response(orig_data)
+    util.return_response({"objects": []})
 
 
 if __name__ == '__main__':
