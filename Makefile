@@ -19,6 +19,10 @@ build: clean code ## build all (creates build folder)
 	mkdir -p $(BUILD_DIR)/$(PLUGIN_NAME)
 	cp manifest.master.yml $(BUILD_DIR)/$(PLUGIN_NAME)/manifest.yml
 	cp -r server l10n fas_config customDataTypeUpdater $(BUILD_DIR)/$(PLUGIN_NAME)
+# remove Go stuff
+	rm -rf $(BUILD_DIR)/$(PLUGIN_NAME)/server/extension/hello/*
+	cp -r server/extension/hello/*.exe $(BUILD_DIR)/$(PLUGIN_NAME)/server/extension/hello
+
 	mkdir -p $(BUILD_DIR)/$(PLUGIN_NAME)/webfrontend
 	cp -r $(JS) webfrontend/FylrExample.html webfrontend/*.css $(BUILD_DIR)/$(PLUGIN_NAME)/webfrontend
 
