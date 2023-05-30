@@ -82,7 +82,7 @@ extensions:
     exec:
       service: "exec"
       commands:
-        - prog: "%_exec.pluginDir%/server/extension/hello/hello-%_exec.GOOS%.exe"
+        - prog: "%_exec.pluginDir%/server/extension/hello/hello-%_exec.GOOS%-%_exec.GOARCH%.exe"
           stdin:
             type: "body"
           stdout:
