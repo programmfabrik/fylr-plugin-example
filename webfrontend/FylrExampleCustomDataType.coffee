@@ -83,7 +83,6 @@ class FylrExampleCustomDataType extends CustomDataType
 
 	getSaveData: (data, save_data, opts) ->
 		cdata = data[@name()] or data._template?[@name()] or {}
-		cdata._expires_at = (new Date()).toISOString()
 
 		cdata._fulltext =
 			text: cdata.textfield
