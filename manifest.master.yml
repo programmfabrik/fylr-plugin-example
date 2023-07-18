@@ -313,8 +313,26 @@ callbacks:
           type: objecttype
           objecttypes:
             - photographer
+      - name: "validation errors example"
+        callback: validation_errors
+        filter:
+          type: objecttype
+          objecttypes:
+            - validation_errors
 
     callbacks:
+      validation_errors:
+        exec:
+          service: "node"
+          commands:
+            - prog: "node"
+              stdin:
+                type: body
+              stdout:
+                type: body
+              args:
+                - type: "value"
+                  value: "%_exec.pluginDir%/server/validation_errors/validation_errors.js"
       bounce:
         exec:
           service: "node"
