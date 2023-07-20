@@ -17,6 +17,11 @@ process.stdin.on('end', () => {
         {
             "code": "validation.plugin.error",
             "statuscode": 400,
+            "parameters": {
+                "henk": "torsten",
+                "a": 4,
+                "b": [ 1, 2, 3 ]
+            }
         }
     ));
     console.error("This error goes to STDERR")
