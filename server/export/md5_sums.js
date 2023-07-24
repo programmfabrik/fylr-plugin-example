@@ -57,6 +57,10 @@ try {
         console.log(JSON.stringify(info.export._files, "", "    "))
         process.exit(0)
     }
+    if (info.plugin_action == "produce?dummy.json") {
+        console.log(JSON.stringify({"hello": "world"}, "", "    "))
+        process.exit(0)
+    }
 
     for (let f of info.export._files) {
         console.error(f)
@@ -76,6 +80,20 @@ try {
             "path": "files/infos.json",
             "content_type": "application/json; charset=utf-8",
             "plugin_action": "produce?infos.json",
+            "info": {
+            }
+        }
+    })
+
+    // dummy file that contains a timestamp set by the plugin
+    info.export._files.push({
+        "path": "files/dummy.json",
+        "format": "application/json",
+        "export_file_internal": {
+            "path": "files/dummy.json",
+            "content_type": "application/json; charset=utf-8",
+            "plugin_action": "produce?dummy.json",
+            "date_created": new Date().toISOString(),
             "info": {
             }
         }
