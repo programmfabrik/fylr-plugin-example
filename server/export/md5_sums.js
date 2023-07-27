@@ -85,7 +85,8 @@ try {
         }
     })
 
-    // dummy file that contains a timestamp set by the plugin
+    // dummy file that contains a fixed timestamp set by the plugin
+    // this is only for apitests
     info.export._files.push({
         "path": "files/dummy.json",
         "format": "application/json",
@@ -93,7 +94,7 @@ try {
             "path": "files/dummy.json",
             "content_type": "application/json; charset=utf-8",
             "plugin_action": "produce?dummy.json",
-            "date_created": new Date().toISOString(),
+            "date_created": "2019-05-27T17:42:34.448Z",
             "info": {
             }
         }
