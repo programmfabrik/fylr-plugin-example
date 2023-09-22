@@ -6,7 +6,7 @@ COFFEE_FILES = \
 
 JS = webfrontend/FylrExample.js
 
-PLUGIN_NAME = fylr-plugin-example
+PLUGIN_NAME = fylr_example
 ZIP_NAME ?= $(PLUGIN_NAME).zip
 BUILD_DIR = build
 
