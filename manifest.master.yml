@@ -41,9 +41,9 @@ extensions:
 
   dump/sleep:
     exec:
-      service: "python"
+      service: "python3"
       commands:
-        - prog: "python"
+        - prog: "python3"
           stdout:
             type: "body"
           args:
