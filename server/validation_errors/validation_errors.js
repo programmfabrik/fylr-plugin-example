@@ -4,7 +4,7 @@ Validation Errors dynamic example.
 
 This is a dynamic validation error example, it will generate a validation error
 for each field for the objecttype "validation_errors"  if the field is not empty.
-With this example you can easily test the validation error handling in the editor for all fields.
+And for reverse fields it will generate a validation error if the value of the field starts with "_"
 
 The general rules for the field names are:
  - Normal Fields : <objecttype_name>.<field_name>
@@ -82,6 +82,31 @@ process.stdin.on('data', d => {
 
 
 process.stdin.on('end', () => {
+
+    isEmpty = (obj) => {
+        //if its an array
+        if (Array.isArray(obj)) {
+            return obj.length === 0;
+        }
+        //if its an object
+        if (typeof obj === 'object') {
+            for (const key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        //if its a string
+        else if (typeof obj === 'string') {
+            return obj.length === 0 || obj === "<null>"
+        }
+        // Everything else
+        else {
+            return !obj;
+        }
+    }
+
     // We get the objects being saved from input
     const objects = JSON.parse(input)?.objects;
     if (!objects || !objects.length > 0) {
@@ -90,34 +115,48 @@ process.stdin.on('end', () => {
 
     const objecttype = objects[0]["_objecttype"];
     let problemsCount = 0;
+
     const errors = objects.map(o => {
-        let e = [];
-        for (const fieldName in o[objecttype]) {
+
+        checkField = (fieldName, fieldValue, prePath=null, preFieldName = null) => {
+
             if (fieldName.startsWith("_") && !fieldName.startsWith("_nested") && !fieldName.startsWith("_reverse_nested") ) {
-                continue;
-            }
-            const fieldValue = o[objecttype][fieldName];
-            if (fieldValue === null || fieldValue === undefined || fieldValue === "") {
-                continue;
+               return;
             }
 
             // Demo nested errors
             if (fieldName.startsWith("_nested") && fieldValue.length > 0) {
                 let nestedProblemsCount = 0;
                 let idx = 0;
-                fieldValue.forEach(nestedObject => {
+                fieldValue.forEach( nestedObject => {
                     for (const nestedFieldName in nestedObject) {
                         const nestedFieldValue = nestedObject[nestedFieldName];
-                        if (nestedFieldValue === null) {
+
+                        // Here we build the full path of the field but without some string that ez5 add like __ or _nested__ etc..
+                        let n = nestedFieldName.startsWith("_nested") ? nestedFieldName.substring(fieldName.length + 2) + "[]" : nestedFieldName;
+                        let f = fieldName.substring(10 + objecttype.length);
+
+                        // We need to build the full path of the field we use the prePath and preFieldName to build it, if any
+                        let pre = prePath ? prePath : objecttype;
+                        if (preFieldName) {
+                            // n start with prefieldname + "__"?
+                            f = f.startsWith(preFieldName + "__") ?  f.substring(preFieldName.length + 2) : f;
+                        }
+
+                        // The cleaned path that will be sent with the error to the frontend
+                        fullPath = pre + "." + f + "[" + idx + "]." + n;
+
+                        if (!isEmpty(nestedFieldValue)) {
+                            // We recursively check the nested fields, we pass the full path of the field
+                            // and the name of the parent field to build the full path of the nested field
+                            fullPath = pre + "." + f + "[" + idx + "]";
+                            checkField(nestedFieldName, nestedFieldValue, fullPath, f);
                             continue;
                         }
 
-                        const n = nestedFieldName.startsWith("_nested") ? nestedFieldName.substring(fieldName.length + 2) + "[]" : nestedFieldName;
-                        const f = fieldName.substring(10 + objecttype.length);
-
                         e.push({
-                            "field": objecttype + "." + f + "[" + idx + "]." + n,
-                            "message": `Error on  **${nestedFieldName}** with value, fields can only be empty`,
+                            "field": fullPath,
+                            "message": `Error on  **${nestedFieldName}** with value, fields can't be empty`,
                             "parameters": {
                                 a: "a",
                                 b: "b",
@@ -134,13 +173,9 @@ process.stdin.on('end', () => {
                     const newNestedFieldName = fieldName.substring(10 + objecttype.length) + "[]";
                     e.push({
                         "field": objecttype + "." + newNestedFieldName,
-                        "message": `There are errors inside **${newNestedFieldName}**`,
-                        "parameters": {
-                            a: "a",
-                            b: "b",
-                        }
+                        "message": `There are errors inside **${newNestedFieldName}**`
                     });
-                };
+                }
 
             } else if (fieldName.startsWith("_reverse_nested") && fieldValue.length > 0) {
                 // Reverse nested fields, the reverse nested is like _reverse_nested_<linked_table>:<field_name>
@@ -152,15 +187,26 @@ process.stdin.on('end', () => {
                     // We iterate the fields of the reverse nested object
                     for (const nestedFieldName in nestedReversedObject) {
 
+
                         if (nestedFieldName.startsWith("_")) {
                             continue;
                         }
-                        if(nestedReversedObject[nestedFieldName] === null) {
-                            continue
+
+                        e.push(
+                            {
+                                "message": `${nestedFieldName} : ${nestedReversedObject[nestedFieldName]}`
+                            }
+                        )
+
+                        if (!nestedReversedObject[nestedFieldName].startsWith("_")) {
+                            continue;
                         }
+
+                        // For reverse nested fields we validate that the user dont send a value starting with _
+
                         e.push({
                             "field": reverseTableName + "." + reverseFieldName + "[" + idx + "]." + nestedFieldName,
-                            "message": `Error for  **${nestedFieldName}** in **${reverseFieldName}**, fields can only be empty`,
+                            "message": `Error for  **${nestedFieldName}** in **${reverseFieldName}**, fields cant start with _`,
                         });
                         reverseProblemsCount++;
                     }
@@ -175,14 +221,16 @@ process.stdin.on('end', () => {
                 }
 
             } else {
-                if (Array.isArray(fieldValue) && fieldValue.length === 0) {
-                    continue;
+
+                if (!isEmpty(fieldValue)) {
+                    return;
                 }
 
+                fieldPath = prePath ? prePath + "." + fieldName : objecttype + "." + fieldName;
                 // Not nested fields
                 e.push({
-                    "field": objecttype + "." + fieldName,
-                    "message": `The field **${fieldName}** only accepts empty values`,
+                    "field": fieldPath,
+                    "message": `The field **${fieldName}** can't be empty values`,
                     "parameters": {
                         a: "a",
                         b: "b",
@@ -190,6 +238,14 @@ process.stdin.on('end', () => {
                 });
                 problemsCount++;
             }
+
+        }
+
+
+
+        let e = [];
+        for (const fieldName in o[objecttype]) {
+            checkField(fieldName, o[objecttype][fieldName]);
         }
         return e;
     });
