@@ -2,13 +2,17 @@ custommetadata:
   - recipename: fylr_example:pdf2text_metadata:pdf2text
     extensions:
       - pdf
+      - jpg
+      - jpeg
+      - jfif
     includeversions: true
   - recipename: fylr_example:example_metadata:example
     includeversions: true
     extensions:
       - png
       - jpg
-
+      - jpeg
+      - jfif
 classes:
   image:
     versions:
@@ -16,8 +20,9 @@ classes:
         extensions:
           - jpg
           - png
+          - jpeg
+          - jfif
         rightsmanagement: true
         recipename: fylr_example:example_image:grayIM
-        zoomable: true
         custommetadata:
           - recipename: fylr_example:example_metadata:example

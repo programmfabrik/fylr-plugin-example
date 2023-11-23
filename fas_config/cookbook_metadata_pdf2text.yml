@@ -5,6 +5,9 @@ recipes:
     class: _metadata
     extensions:
       - pdf
+      - jpg
+      - jpeg
+      - jfif
     metadata:
       - file: "pdf.txt"
         fulltext: true
