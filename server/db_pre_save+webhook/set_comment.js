@@ -23,6 +23,10 @@ process.stdin.on('end', () => {
         if (!data.info) {
             data.info = {}
         }
+        // when we receive the payload from a webook, the config is not included
+        if (!data.info.config && info?.config) {
+            data.info.config = info.config
+        }
     } catch(e) {
         console.error(`Could not parse input: ${e.message}`, e.stack);
         process.exit(1);
