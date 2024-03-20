@@ -384,6 +384,63 @@ callbacks:
                 - type: "value"
                   value: "%_exec.pluginDir%/server/db_pre_save+webhook/check.js"
 
+collection_upload:
+  filename_copy:
+    config:
+      - name: filename_copy
+        parameters:
+          filename_target:
+            type: text
+          more:
+            type: table
+            fields:
+              - name: key
+                type: text
+                position: 0
+              - name: value
+                type: text
+                position: 1
+      - name: test
+        parameters:
+          default_test:
+            type: text
+            default: "horst"
+    callbacks:
+      # upload:
+      #   service: "node"
+      #   commands:
+      #     - prog: "node"
+      #       stdin:
+      #         type: body
+      #       stdout:
+      #         type: body
+      #       args:
+      #         - type: "value"
+      #           value: "%_exec.pluginDir%/server/collection/filename_copy/upload.js"
+      objects:
+        exec:
+          service: "node"
+          commands:
+            - prog: "node"
+              stdin:
+                type: body
+              stdout:
+                type: body
+              args:
+                - type: "value"
+                  value: "%_exec.pluginDir%/server/collection/filename_copy/objects.js"
+      # config_check:
+      #   service: "node"
+      #   commands:
+      #     - prog: "node"
+      #       stdin:
+      #         type: body
+      #       stdout:
+      #         type: body
+      #       args:
+      #         - type: "value"
+      #           value: "%_exec.pluginDir%/server/collection/filename_copy/config_check.js"
+
 base_config:
   - name: comment
     parameters:
