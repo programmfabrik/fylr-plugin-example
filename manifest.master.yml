@@ -438,6 +438,8 @@ custom_types:
         type: text_l10n
       doublefield:
         type: double
+      geofield:
+        type: geo_json
     config:
       schema:
         - name: fylr_example_config
