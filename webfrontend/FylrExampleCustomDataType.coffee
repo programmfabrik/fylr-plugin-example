@@ -12,6 +12,9 @@ class FylrExampleCustomDataType extends CustomDataType
 	supportsStandard: ->
 		true
 
+	supportsGeoStandard: ->
+		true
+
 	initData: (data) ->
 		if not data[@name()]
 			data[@name()] = {}
