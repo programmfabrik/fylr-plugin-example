@@ -1,32 +1,12 @@
 const fs = require('fs')
 const dv = require('./dv.js')
+const http = require('http');
+const https = require('https');
 
 Date.prototype.AddMinutes = function ( minutes ) {
     minutes = minutes ? minutes : 0;
     this.setMinutes( this.getMinutes() + minutes );
     return this;
-}
-
-const http = require('http');
-
-// Function to perform a GET request and return the body of the response
-async function fetchUrl(url) {
-  return new Promise((resolve, reject) => {
-    http.get(url, (res) => {
-      if (res.statusCode < 200 || res.statusCode >= 300) {
-        return reject(new Error('Response status was ' + res.statusCode));
-      }
-      let data = '';
-      res.on('data', (chunk) => {
-        data += chunk;
-      });
-      res.on('end', () => {
-        resolve(data);
-      });
-    }).on('error', (err) => {
-      reject(err);
-    });
-  });
 }
 
 main = (payload) => {
@@ -143,3 +123,29 @@ let config
 })();
 
 
+
+
+
+// Function to perform a GET request and return the body of the response
+async function fetchUrl(url) {
+  // Choose the right module based on the URL
+  const client = url.startsWith('https://') ? https : http;
+
+  return new Promise((resolve, reject) => {
+    client.get(url, (res) => {
+      if (res.statusCode < 200 || res.statusCode >= 300) {
+        return reject(new Error('Response status was ' + res.statusCode));
+      }
+
+      let data = '';
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
+      res.on('end', () => {
+        resolve(data);
+      });
+    }).on('error', (err) => {
+      reject(err);
+    });
+  });
+}

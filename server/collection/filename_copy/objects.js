@@ -1,9 +1,6 @@
 const fs = require('fs');
-
-let info = undefined
-if (process.argv.length >= 3) {
-    info = JSON.parse(process.argv[2])
-}
+const http = require('http');
+const https = require('https');
 
 let input = '';
 process.stdin.on('data', d => {
@@ -15,7 +12,7 @@ process.stdin.on('data', d => {
     }
 });
 
-process.stdin.on('end', () => {
+process.stdin.on('end', async () => {
     let data;
     try {
         // fs.writeFileSync('/tmp/post-in', input);
@@ -25,6 +22,15 @@ process.stdin.on('end', () => {
         process.exit(1);
     }
 
+    let have_token
+    if (data.info.api_user_access_token) {
+        have_token = "yes"
+    } else {
+        have_token = "no"
+    }
+
+    let config = JSON.parse(await fetchUrl(data.info.api_url+"/api/v1/config?access_token="+data.info.api_user_access_token));
+    // fs.writeFileSync('/tmp/config-load', JSON.stringify(config, "", "    "))
 
     data.hotfolder_log = []
 
@@ -39,7 +45,7 @@ process.stdin.on('end', () => {
                 "file": obj[obj._objecttype][col],
                 "filesize": "filesize",
                 "status": "done",
-                "msg": col+" was set by hotfolder plugin",
+                "msg": col+" was set by hotfolder plugin. token: "+have_token+" config.name.internal_name: "+config.system.config.name.internal_name,
                 "asset_id": "123",
                 "system_object_id": "124"
             })
@@ -58,3 +64,30 @@ process.stdin.on('end', () => {
     // fs.writeFileSync('/tmp/post-out', JSON.stringify(data,"","    "));
     console.log(JSON.stringify(data));
 });
+
+
+
+// Function to perform a GET request and return the body of the response
+async function fetchUrl(url) {
+  // Choose the right module based on the URL
+  const client = url.startsWith('https://') ? https : http;
+
+  return new Promise((resolve, reject) => {
+    client.get(url, (res) => {
+      if (res.statusCode < 200 || res.statusCode >= 300) {
+        return reject(new Error('Response status was ' + res.statusCode));
+      }
+
+      let data = '';
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
+      res.on('end', () => {
+        resolve(data);
+      });
+    }).on('error', (err) => {
+      reject(err);
+    });
+  });
+}
+
