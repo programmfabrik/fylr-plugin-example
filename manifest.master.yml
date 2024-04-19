@@ -509,6 +509,9 @@ custom_types:
             value:
               type: bool
     update:
+      # pass in a root session when calling the plugin updater
+      plugin_user:
+        reference: system:root
       exec:
         service: "node"
         commands:

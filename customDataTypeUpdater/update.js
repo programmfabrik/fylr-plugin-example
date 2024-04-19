@@ -7,6 +7,28 @@ Date.prototype.AddMinutes = function ( minutes ) {
     return this;
 }
 
+const http = require('http');
+
+// Function to perform a GET request and return the body of the response
+async function fetchUrl(url) {
+  return new Promise((resolve, reject) => {
+    http.get(url, (res) => {
+      if (res.statusCode < 200 || res.statusCode >= 300) {
+        return reject(new Error('Response status was ' + res.statusCode));
+      }
+      let data = '';
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
+      res.on('end', () => {
+        resolve(data);
+      });
+    }).on('error', (err) => {
+      reject(err);
+    });
+  });
+}
+
 main = (payload) => {
     switch (payload.action) {
         case "start_update":
@@ -14,7 +36,10 @@ main = (payload) => {
                 "state": {
                     "personal": 2
                 },
-                "log": ["started logging"]
+                "log": [
+                    "started logging",
+                    "config.name.internal_name: "+config.system.config.name.internal_name
+                ]
             })
             break
         case "update":
@@ -75,13 +100,21 @@ outputErr = (err2) => {
     process.exit(0);
 }
 
+let config
+
 (() => {
-    run_main = () => {
+    run_main = async () => {
         try {
             let payload = JSON.parse(data)
             // dv.send(payload)
+            // fs.writeFileSync('/tmp/post-in', data);
+
             console.error("data has length", data.length)
             console.error(payload)
+
+            config = JSON.parse(await fetchUrl(info.api_url+"/api/v1/config?access_token="+info.plugin_user_access_token));
+            // fs.writeFileSync('/tmp/config-load', JSON.stringify(config, "", "    "))
+
             main(payload)
         } catch (error) {
             console.error("caught error", error)
@@ -89,7 +122,12 @@ outputErr = (err2) => {
         }
     }
 
-    // dv.send(JSON.parse(process.argv[2]))
+    // info contains api_url, plugin_user, plugin_user_access_token
+    let info = JSON.parse(process.argv[2])
+
+    // fs.writeFileSync('/tmp/post-info', JSON.stringify(info, "", "    "));
+
+    // dv.send(JSON.parse(process.argv))
 
     let data = ""
     process.stdin.setEncoding('utf8');
