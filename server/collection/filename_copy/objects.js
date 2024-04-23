@@ -32,7 +32,7 @@ process.stdin.on('end', async () => {
     let config = JSON.parse(await fetchUrl(data.info.api_url+"/api/v1/config?access_token="+data.info.api_user_access_token));
     // fs.writeFileSync('/tmp/config-load', JSON.stringify(config, "", "    "))
 
-    data.hotfolder_log = []
+    data.upload_log = []
 
     var modified = false
     let col = data?.info?.collection_config?.filename_copy?.filename_target
@@ -40,14 +40,13 @@ process.stdin.on('end', async () => {
         data.objects.forEach((obj, idx) => {
             // set a custom field to the filename of the uploaded file
             obj[obj._objecttype][col] = data?.info?.file?.original_filename || "<no filename>"
-            data.hotfolder_log.push({
-                "path": "path",
-                "file": obj[obj._objecttype][col],
-                "filesize": "filesize",
+            data.upload_log.push({
+                "file": "plugin_"+obj[obj._objecttype][col],
+                "filesize": 1234567,
                 "status": "done",
                 "msg": col+" was set by hotfolder plugin. token: "+have_token+" config.name.internal_name: "+config.system.config.name.internal_name,
-                "asset_id": "123",
-                "system_object_id": "124"
+                "file_eas_id": 123,
+                "system_object_id": 124
             })
             modified = true
         })
