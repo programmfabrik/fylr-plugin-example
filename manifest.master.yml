@@ -50,6 +50,21 @@ extensions:
             - type: "value"
               value: "%_exec.pluginDir%/server/extension/sleep.py"
 
+  dump/signature:
+    exec:
+      service: "python3"
+      commands:
+        - prog: "python3"
+          stdin:
+            type: "body"
+          stdout:
+            type: "body"
+          args:
+            - type: "value"
+              value: "%_exec.pluginDir%/server/extension/signature.py"
+            - type: "value"
+              value: "%info.json%"
+
   dump/info:
     exec:
       service: "node"
