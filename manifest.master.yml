@@ -14,6 +14,7 @@ plugin:
 
 base_url_prefix: "webfrontend"
 
+# api extensions
 extensions:
   dump/empty:
     exec:
@@ -194,6 +195,7 @@ extensions:
             - type: "value"
               value: "%info.json%"
 
+# built-in callbacks which happen at certain points in the code flow of fylr server
 callbacks:
   export_transport:
     copy_file:
@@ -399,6 +401,7 @@ callbacks:
                 - type: "value"
                   value: "%_exec.pluginDir%/server/db_pre_save+webhook/check.js"
 
+# hook which is used when a collection upload happens, either via /api/eas?collection=ID or the hofolder
 collection_upload:
   filename_copy:
     config:
@@ -456,6 +459,7 @@ collection_upload:
       #         - type: "value"
       #           value: "%_exec.pluginDir%/server/collection/filename_copy/config_check.js"
 
+# base config extension. These parameters will be accessible via /api/config.
 base_config:
   - name: comment
     parameters:
@@ -498,6 +502,28 @@ system_rights:
         type: pool-select
       - name: preview-versions
         type: preview-versions
+
+# hook for the plugin scheduler
+scheduler:
+  # name of this scheduler plugin
+  example: # "module"
+    callbacks:
+      run:
+        plugin_user:
+          reference: system:root
+        exec:
+          service: "python3"
+          commands:
+            - prog: "python3"
+              stdin:
+                type: body
+              stdout:
+                type: body
+              args:
+                - type: "value"
+                  value: "%_exec.pluginDir%/server/scheduled/example.py"
+                - type: "value"
+                  value: "%info.json%"
 
 custom_types:
   example:
