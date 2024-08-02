@@ -507,11 +507,11 @@ system_rights:
 scheduler:
   # name of this scheduler plugin
   example: # "task"
+    plugin_user:
+      # set to true to require a plugin user to be set in the plugin manager
+      require: true
     callbacks:
       run:
-        plugin_user:
-          # set to true to require a plugin user to be set in the plugin manager
-          require: true
         exec:
           service: "python3"
           commands:
