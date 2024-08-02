@@ -506,11 +506,12 @@ system_rights:
 # hook for the plugin scheduler
 scheduler:
   # name of this scheduler plugin
-  example: # "module"
+  example: # "task"
     callbacks:
       run:
         plugin_user:
-          reference: system:root
+          # set to true to require a plugin user to be set in the plugin manager
+          require: true
         exec:
           service: "python3"
           commands:

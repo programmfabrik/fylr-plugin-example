@@ -8,6 +8,9 @@ def respond():
     response_json = json.dumps({
         "status_code": 200,
         "body": {
+            "state": {
+                "henk": "torsten"
+            },
             "log": ["log entry 1", "log entry 2"]
         }
     }, indent=4)
