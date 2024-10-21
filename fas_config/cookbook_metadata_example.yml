@@ -5,9 +5,19 @@ recipes:
     class: _metadata
     metadata:
       - file: "example_metadata.json"
+    mapping:
+      exec:
+        service: node
+        commands:
+          - prog: node
+            stdout:
+              type: body
+            args:
+              - "-e"
+              - "require('fs').createReadStream(process.argv[1]).pipe(process.stdout)"
+              - "%_exec.pluginDir%/fas_config/custom_mapping.json"
     execs:
       - service: node
-        extension: "<nil>"
         commands:
           - prog: node
             args:

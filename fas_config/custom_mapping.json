@@ -1,0 +1,42 @@
+{
+    "import": {
+        "fields": [
+            {
+                "name": "filename",
+                "displayname": {
+                    "de-DE": "Dateiname",
+                    "en-US": "Filename"
+                },
+                "gjson": "plugin-example.chat-gpt.fields.filename",
+                "type": "text"
+            },
+            {
+                "name": "title",
+                "displayname": {
+                    "de-DE": "Titel",
+                    "en-US": "Title"
+                },
+                "gjson": "plugin-example.chat-gpt.fields.title",
+                "type": "text_l10n"
+            },
+            {
+                "name": "description",
+                "displayname": {
+                    "de-DE": "Beschreibung",
+                    "en-US": "Description"
+                },
+                "gjson": "plugin-example.chat-gpt.fields.description",
+                "type": "text_l10n"
+            },
+            {
+                "name": "keywords",
+                "displayname": {
+                    "de-DE": "Schlagwörter",
+                    "en-US": "Keywords"
+                },
+                "gjson": "plugin-example.chat-gpt.fields.keywords",
+                "type": "text_l10n"
+            }
+        ]
+    }
+}
