@@ -31,7 +31,6 @@ fs.writeFileSync(fn, JSON.stringify({
                         "en-US": "Wall"
                     },
                     {
-                        "de-DE": "Kunst",
                         "en-US": "Art"
                     },
                     {
