@@ -5,6 +5,22 @@ recipes:
     class: _metadata
     metadata:
       - file: "example_metadata.json"
+    execs:
+      - service: node
+        commands:
+          - prog: node
+            args:
+              - "-e"
+              # read custom_metadata.json (arg 1) and write to example_metadata.json (arg 2)
+              - "console.error('Current working directory:', process.cwd()); require('fs').createReadStream(process.argv[1]).pipe(require('fs').createWriteStream(process.argv[2]));"
+              - "%_exec.pluginDir%/fas_config/custom_metadata.json"
+              - type: file_out
+                file:
+                  name: "example_metadata.json"
+  example-request-only:
+    class: _metadata
+    metadata:
+      - file: "example_metadata.json"
     mapping:
       exec:
         service: node
@@ -15,18 +31,16 @@ recipes:
             args:
               - "-e"
               - "require('fs').createReadStream(process.argv[1]).pipe(process.stdout)"
-              - "%_exec.pluginDir%/fas_config/custom_mapping.json"
+              - "%_exec.pluginDir%/fas_config/request_only_mapping.json"
     execs:
       - service: node
         commands:
           - prog: node
             args:
-              - type: "value"
-                value: "%_exec.pluginDir%/server/recipe/meta.js"
-              - type: file_in
-                file:
-                  name: "source.file"
-                  url: "%_source.url%"
+              - "-e"
+              # read request_only_metadata.json (arg 1) and write to example_metadata.json (arg 2)
+              - "console.error('Current working directory:', process.cwd()); require('fs').createReadStream(process.argv[1]).pipe(require('fs').createWriteStream(process.argv[2]));"
+              - "%_exec.pluginDir%/fas_config/request_only_metadata.json"
               - type: file_out
                 file:
                   name: "example_metadata.json"

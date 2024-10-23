@@ -10,7 +10,6 @@ recipes:
         fulltext: true
     execs:
       - service: metadata
-        extension: "<nils>"
         commands:
           - prog: java
             stdout:
