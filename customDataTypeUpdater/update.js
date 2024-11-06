@@ -28,6 +28,9 @@ main = (payload) => {
                 payload.objects[i].data._expires_at = (new Date()).AddMinutes(2).toISOString()
                 // increment version. this is checked by apitest test/api/db/custom_data_type_updater
                 payload.objects[i].data.version++
+                payload.objects[i].data._standard = {
+                    text: "custom "+payload.objects[i].data.idx+" v"+payload.objects[i].data.version
+                }
                 console.error("data", i, payload.objects[i].data.numberfield)
             }
             // add a dup, so fylr learns how to de dup the data
@@ -36,6 +39,7 @@ main = (payload) => {
                 payload.objects[0] = JSON.parse(JSON.stringify(payload.objects[1]))
                 payload.objects[0].identifier = id
             }
+
             outputData({
                 "payload": payload.objects,
                 "log": [payload.objects.length+" objects in payload"]

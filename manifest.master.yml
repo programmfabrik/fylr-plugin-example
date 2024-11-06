@@ -568,7 +568,9 @@ custom_types:
               - type: "value"
                 value: "%info.json%"
       timeout: 60
+      # Defaults to 100, will be set to maxium 100
       batch_size: 10
+      # Defaults to 30
       expires_days: 1
 
 fas_config:

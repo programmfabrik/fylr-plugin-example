@@ -23,7 +23,7 @@ recipes:
       - file: "example_metadata.json"
     displayname:
       de-DE: Beispiel Metadaten Mapping
-      en-US: Beispiel Metadaten Mapping
+      en-US: Example Metadaten Mapping
     mapping:
       exec:
         service: node
