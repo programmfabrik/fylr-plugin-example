@@ -23,7 +23,7 @@ classes:
           - jpg
           - png
         rightsmanagement: true
-        recipename: fylr_example:example_image:grayIM
+        recipename: fylr_example:example_image:grayPy
         zoomable: true
         custommetadata:
           - recipename: fylr_example:example_metadata:example

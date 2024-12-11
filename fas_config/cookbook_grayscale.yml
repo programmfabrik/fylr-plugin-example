@@ -34,10 +34,14 @@ recipes:
           - prog: python3
             args:
               - "%_exec.pluginDir%/server/recipe/grayscale.py"
+              - "--info"
+              - "%info.json%"
+              - "--in"
               - type: file_in
                 file:
                   url: "%_source.url%"
                   name: "%_source.generatedname%"
+              - "--out"
               - type: file_out
                 file:
                   url: "%_target.url%"
