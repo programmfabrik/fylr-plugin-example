@@ -9,7 +9,7 @@ def check_sig(headers, hname, body):
     m = re.match('(sha(1|256))=([0-9a-f]+)', h)
     if not m:
         return "invalid header format: " + h
-
+    
     hhash = hmac.new(
         SECRET.encode('utf-8'),
         body.encode('utf-8'),

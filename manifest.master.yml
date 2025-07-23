@@ -81,24 +81,6 @@ extensions:
             - type: "value"
               value: "%info.json%"
 
-  dump/plugin_user:
-    plugin_user:
-      # reference a plugin defined baseconfig
-      base_config: "user.api_user"
-    exec:
-      service: "python3"
-      commands:
-        - prog: "python3"
-          stdin:
-            type: "body"
-          stdout:
-            type: "body"
-          args:
-            - type: "value"
-              value: "%_exec.pluginDir%/server/extension/plugin_user.py"
-            - type: "value"
-              value: "%info.json%"
-
   dump/error:
     exec:
       service: "node"
@@ -382,8 +364,6 @@ callbacks:
                 - type: "value"
                   value: "%_exec.pluginDir%/server/validation_errors/validation_errors.js"
       bounce:
-        plugin_user:
-          optional: true
         exec:
           service: "node"
           commands:
@@ -493,7 +473,6 @@ collection_upload:
       #           value: "%_exec.pluginDir%/server/collection/filename_copy/config_check.js"
 
 # base config extension. These parameters will be accessible via /api/config.
-
 base_config:
   - name: comment
     parameters:
@@ -506,10 +485,6 @@ base_config:
         type: bool
       data:
         type: json
-  - name: user
-    parameters:
-      api_user:
-        type: user
 
 system_rights:
   - name: example_right
@@ -540,6 +515,29 @@ system_rights:
         type: pool-select
       - name: preview-versions
         type: preview-versions
+
+# hook for the plugin scheduler
+scheduler:
+  # name of this scheduler plugin
+  example: # "task"
+    plugin_user:
+      # set to true to require a plugin user to be set in the plugin manager
+      require: true
+    callbacks:
+      run:
+        exec:
+          service: "python3"
+          commands:
+            - prog: "python3"
+              stdin:
+                type: body
+              stdout:
+                type: body
+              args:
+                - type: "value"
+                  value: "%_exec.pluginDir%/server/scheduled/example.py"
+                - type: "value"
+                  value: "%info.json%"
 
 custom_types:
   example:
