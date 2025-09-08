@@ -510,6 +510,11 @@ base_config:
     parameters:
       api_user:
         type: user
+  - name: booleans
+    parameters:
+      default_true:
+        type: bool
+        default: true
 
 system_rights:
   - name: example_right
