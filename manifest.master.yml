@@ -593,6 +593,45 @@ custom_types:
       # Defaults to 30
       expires_days: 1
 
+# Background tasks plugin example
+task_modules:
+  - name: fylr_example_task
+    displayname:
+      en-US: Test Task Module
+      de-DE: Test Task Modul
+    description:
+      en-US: An ecample module for plugin bg tasks
+      de-DE: Ein Beispiel-Modul für Plugin-Hintergrundtasks
+    params:
+      - name: message
+        displayname:
+          en-US: Message
+          de-DE: Nachricht
+        description:
+          en-US: Message to log
+          de-DE: Nachricht zum Loggen
+        type: text
+        position: 0
+      - name: count
+        displayname:
+          en-US: Count
+          de-DE: Anzahl
+        description:
+          en-US: Number of times to log the message
+          de-DE: Anzahl der Wiederholungen
+        type: int
+        position: 1
+    exec:
+      service: python3
+      commands:
+        - prog: python3
+          stdout:
+            type: body
+          args:
+            - type: value
+              value: "%_exec.pluginDir%/server/task_runner.py"
+    debug: true
+
 fas_config:
   produce_config: fas_config/custom_produce.yml
   cookbooks:
