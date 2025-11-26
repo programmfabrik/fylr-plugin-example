@@ -442,6 +442,8 @@ collection_upload:
         parameters:
           filename_target:
             type: text
+          copy_object:
+            type: bool
           more:
             type: table
             fields:

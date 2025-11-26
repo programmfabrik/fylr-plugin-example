@@ -29,3 +29,10 @@ server.right.system.plugin.fylr_example.example_right.parm.eas-column-select,Ass
 example.detail.sidebar.plugin.render_object|icon,fa-cubes,fa-cubes,fa-cubes,fa-cubes,fa-cubes,fa-cubes,fa-cubes,fa-cubes,fa-cubes,fa-cubes
 example.detail.sidebar.plugin.render_object|hint,Example Plugin: Objekt rendern,Example Plugin: render object,Example Plugin: render object,Example Plugin: render object,Example Plugin: render object,Example Plugin: render object,Example Plugin: render object,Example Plugin: render object,Example Plugin: render object,Example Plugin: render object
 fylr_example.check.not_allowed,"""henk was here"" ist nicht erlaubt","""henk was here"" is not allowed","""henk was here"" is not allowed","""henk was here"" is not allowed","""henk was here"" is not allowed","""henk was here"" is not allowed","""henk was here"" is not allowed","""henk was here"" is not allowed","""henk was here"" is not allowed","""henk was here"" is not allowed"
+collection_upload.parameter.filename_target.label,,Target Field,,,,,,,,
+collection_upload.parameter.more.label,,More,,,,,,,,
+collection_upload.parameter.more.key.label,,Key,,,,,,,,
+collection_upload.parameter.more.value.label,,Value,,,,,,,,
+collection_upload.parameter.copy_object.label,,Copy Object,,,,,,,,
+collection_upload.parameter.default_test.label,,Test,,,,,,,,
+collection_upload.parameter.copy_object.checkbox,,-,,,,,,,,
