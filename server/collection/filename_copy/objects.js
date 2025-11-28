@@ -83,14 +83,23 @@ function createObjectCopy(sourceObject) {
     copiedData._id = null;
     copiedData._version = 1;
 
-    return {
+    result = {
         [objectType]: copiedData,
-        _pool: sourceObject._pool,
         _mask: sourceObject._mask,
         _objecttype: objectType,
-        _tags: sourceObject._tags || [],
-        _idx_in_objects: 1
     };
+
+    if(sourceObject._tags !== undefined)
+    {
+        result._tags = sourceObject._tags;
+    }
+
+    if(sourceObject._pool !== undefined)
+    {
+        result._pool = sourceObject._pool;
+    }
+
+    return result;
 }
 
 async function processObjects(data, config) {
