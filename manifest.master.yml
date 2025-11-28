@@ -307,6 +307,19 @@ callbacks:
                 value: "%_exec.pluginDir%/server/export/error.js"
               - type: "value"
                 value: "%info.json%"
+    sleep:
+      exec:
+        timeoutSec: 120
+        service: "python3"
+        commands:
+          - prog: "python3"
+            stdout:
+              type: body
+            args:
+              - type: "value"
+                value: "%_exec.pluginDir%/server/export/sleep.py"
+              - type: "value"
+                value: "%info.json%"
 
   transition_db_pre_save:
     set_comment:
