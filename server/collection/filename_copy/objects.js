@@ -1,6 +1,3 @@
-const http = require('http');
-const https = require('https');
-
 const DEGUG = true;
 
 async function readStdin() {
@@ -11,68 +8,29 @@ async function readStdin() {
     return Buffer.concat(chunks).toString();
 }
 
-async function fetchUrl(url) {
-    const client = url.startsWith('https://') ? https : http;
-
-    return new Promise((resolve, reject) => {
-        client.get(url, (res) => {
-            if (res.statusCode < 200 || res.statusCode >= 300) {
-                return reject(new Error(`Response status was ${res.statusCode}`));
-            }
-
-            const chunks = [];
-            res.on('data', (chunk) => chunks.push(chunk));
-            res.on('end', () => resolve(Buffer.concat(chunks).toString()));
-        }).on('error', reject);
-    });
-}
-
 async function fetchConfig(apiUrl, accessToken) {
     const configUrl = `${apiUrl}/api/v1/config?access_token=${accessToken}`;
-    const response = await fetchUrl(configUrl);
-    return JSON.parse(response);
+    const response = await fetch(configUrl);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch config: ${response.status}`);
+    }
+    return response.json();
 }
 
 async function postRequest(url, body, bearerToken) {
-    const parsedUrl = new URL(url);
-    const client = parsedUrl.protocol === 'https:' ? https : http;
-
-    const postData = JSON.stringify(body);
-
-    const options = {
-        hostname: parsedUrl.hostname,
-        port: parsedUrl.port || (parsedUrl.protocol === 'https:' ? 443 : 80),
-        path: parsedUrl.pathname + parsedUrl.search,
+    const response = await fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Content-Length': Buffer.byteLength(postData),
             'Authorization': `Bearer ${bearerToken}`
-        }
-    };
-
-    return new Promise((resolve, reject) => {
-        const req = client.request(options, (res) => {
-            if (res.statusCode < 200 || res.statusCode >= 300) {
-                return reject(new Error(`Response status was ${res.statusCode}`));
-            }
-
-            const chunks = [];
-            res.on('data', (chunk) => chunks.push(chunk));
-            res.on('end', () => {
-                const responseBody = Buffer.concat(chunks).toString();
-                try {
-                    resolve(JSON.parse(responseBody));
-                } catch {
-                    resolve(responseBody);
-                }
-            });
-        });
-
-        req.on('error', reject);
-        req.write(postData);
-        req.end();
+        },
+        body: JSON.stringify(body)
     });
+    if (!response.ok) {
+        console.error(`Request failed: ${response.status} ${await response.text()}`);
+        exit(1);
+    }
+    return response.json();
 }
 
 function createObjectCopy(sourceObject) {
@@ -150,14 +108,10 @@ async function processObjects(data, config) {
         // This will test that api/db can be used inside a collection_upload plugin.
         if(data?.info?.collection_config?.filename_copy?.copy_object)
         {
-            try {
-                const response = await postRequest(endpoint, requestBody, accessToken);
-                if (DEGUG) {
-                    const fs = require('fs');
-                    fs.writeFileSync('/tmp/filename_copy_response.json', JSON.stringify(response, null, 2));
-                }
-            } catch (error) {
-                console.error(`Failed to create object copy: ${error.message}`);
+            const response = await postRequest(endpoint, requestBody, accessToken);
+            if (DEGUG) {
+                const fs = require('fs');
+                fs.writeFileSync('/tmp/filename_copy_response.json', JSON.stringify(response, null, 2));
             }
         }
     }
