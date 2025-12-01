@@ -28,7 +28,7 @@ async function postRequest(url, body, bearerToken) {
     });
     if (!response.ok) {
         console.error(`Request failed: ${response.status} ${await response.text()}`);
-        exit(1);
+        process.exit(1);
     }
     return response.json();
 }
