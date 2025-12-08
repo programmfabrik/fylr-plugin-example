@@ -1,7 +1,7 @@
-# fylr-plugins
+# fylr_example
 
-Collection of publicly available plugins for FYLR.
+Collection of publicly available plugin examples for FYLR.
 
-## Contanct us
+## Contact us
 
 For Issues and questions please write to support@programmfabrik.de

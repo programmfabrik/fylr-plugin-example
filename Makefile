@@ -27,6 +27,8 @@ build: clean code buildinfojson ## build all (creates build folder)
 
 	mkdir -p $(BUILD_DIR)/$(PLUGIN_NAME)/webfrontend
 	cp -r $(JS) webfrontend/FylrExample.html webfrontend/*.css $(BUILD_DIR)/$(PLUGIN_NAME)/webfrontend
+# for zip release: include Readme.md
+	cp README.md $(BUILD_DIR)/$(PLUGIN_NAME)/webfrontend
 
 code: $(JS) go ## build Coffeescript + Go code
 

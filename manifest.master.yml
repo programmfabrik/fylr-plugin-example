@@ -6,6 +6,7 @@ plugin:
     url: FylrExample.js
     css: FylrExample.css
     html: FylrExample.html
+    readme: README.md
   custom:
     henk: denk
   displayname:
