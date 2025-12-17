@@ -3,25 +3,40 @@ const https = require('http');
 const crypto = require('crypto');
 
 
-// READ STDIN
+// Start reading stdin immediately
 let stdinInput = '';
+let stdinEnded = false;
+let stdinResolve = null;
+
 process.stdin.setEncoding('utf8');
 process.stdin.on('data', (chunk) => (stdinInput += chunk));
+process.stdin.on('end', () => {
+    stdinEnded = true;
+    if (stdinResolve) stdinResolve();
+});
 
-const stdinPromise = new Promise((resolve) => {
-    process.stdin.on('end', () => {
-        if (!stdinInput) {
-            resolve(null);
-            return;
-        }
-        try {
-            resolve(JSON.parse(stdinInput));
-        } catch (e) {
-            console.error('Failed to parse stdin JSON:', e.message);
-            resolve(null);
+function getStdinData() {
+    return new Promise((resolve) => {
+        const parseAndResolve = () => {
+            if (!stdinInput) {
+                resolve(null);
+            } else {
+                try {
+                    resolve(JSON.parse(stdinInput));
+                } catch (e) {
+                    console.error('Failed to parse stdin JSON:', e.message);
+                    resolve(null);
+                }
+            }
+        };
+
+        if (stdinEnded) {
+            parseAndResolve();
+        } else {
+            stdinResolve = parseAndResolve;
         }
     });
-});
+}
 
 const getMD5FromURL = async (url) => {
     const md5sum = crypto.createHash('md5');
@@ -54,9 +69,6 @@ if (process.argv.length < 3) {
 let info = undefined
 try {
     info = JSON.parse(process.argv[2])
-    const stdinData = await stdinPromise;
-    info.stdin = stdinData
-    info.export = stdinData.export
     // console.error("info read", info)
 } catch(e) {
     console.error(`Unable to parse argument <info>`, e)
@@ -64,6 +76,12 @@ try {
 }
 
 (async() => {
+    // Read stdin and add it to info
+    const stdinData = await getStdinData();
+    info.stdin = stdinData
+    if (stdinData) {
+        info.export = stdinData.export
+    }
 
     if (info.plugin_action == "produce?infos.json") {
         for (let i = 0, j = info.export._files.length; i < j; i++) {
