@@ -19,6 +19,41 @@ const fs = require('fs');
 const http = require('http');
 const https = require('https');
 
+// Start reading stdin immediately
+let stdinInput = '';
+let stdinEnded = false;
+let stdinResolve = null;
+
+process.stdin.setEncoding('utf8');
+process.stdin.on('data', (chunk) => (stdinInput += chunk));
+process.stdin.on('end', () => {
+    stdinEnded = true;
+    if (stdinResolve) stdinResolve();
+});
+
+function getStdinData() {
+    return new Promise((resolve) => {
+        const parseAndResolve = () => {
+            if (!stdinInput) {
+                resolve(null);
+            } else {
+                try {
+                    resolve(JSON.parse(stdinInput));
+                } catch (e) {
+                    console.error('Failed to parse stdin JSON:', e.message);
+                    resolve(null);
+                }
+            }
+        };
+
+        if (stdinEnded) {
+            parseAndResolve();
+        } else {
+            stdinResolve = parseAndResolve;
+        }
+    });
+}
+
 if (process.argv.length < 3) {
     console.error(`Wrong number of parameters. Usage: "node export_transport_demo.js <info>"`)
     process.exit(1);
@@ -70,22 +105,40 @@ const sendDataToURL = async (url, data) => {
 }
 
 (async() => {
+    // Read stdin and add it to info
+    const stdinData = await getStdinData();
+    if (stdinData !== null) {
+        info.stdin = stdinData;
+    }
+
+    let hasError = false;
+
     if (tOpts.url) {
-        await sendDataToURL(tOpts.url, JSON.stringify(info));
-        tLog.push(`data sent: ${tOpts.url}`)
+        try {
+            await sendDataToURL(tOpts.url, JSON.stringify(info));
+            tLog.push(`data sent: ${tOpts.url}`)
+        } catch (e) {
+            tLog.push(`failed to send data to ${tOpts.url}: ${e.message}`)
+            hasError = true;
+        }
     }
     if (tOpts.file) {
-        fs.writeFileSync(tOpts.file, JSON.stringify(info,"","    "));
-        tLog.push(`file written: ${tOpts.file}`)
+        try {
+            fs.writeFileSync(tOpts.file, JSON.stringify(info,"","    "));
+            tLog.push(`file written: ${tOpts.file}`)
+        } catch (e) {
+            tLog.push(`failed to write file ${tOpts.file}: ${e.message}`)
+            hasError = true;
+        }
     }
     if (tOpts["pw:secret"]) {
         tLog.push(`pw:secret: `+ tOpts["pw:secret"])
     }
     // write back modified export json
     console.log(JSON.stringify({
-        "_state": "done",
+        "_state": hasError ? "failed" : "done",
         "_transport_log": tLog
     }));
-    process.exit(0);
+    process.exit(hasError ? 1 : 0);
 })();
 
