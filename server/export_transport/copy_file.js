@@ -19,6 +19,25 @@ const fs = require('fs');
 const http = require('http');
 const https = require('https');
 
+let stdinInput = '';
+process.stdin.setEncoding('utf8');
+process.stdin.on('data', (chunk) => (stdinInput += chunk));
+
+const stdinPromise = new Promise((resolve) => {
+    process.stdin.on('end', () => {
+        if (!stdinInput) {
+            resolve(null);
+            return;
+        }
+        try {
+            resolve(JSON.parse(stdinInput));
+        } catch (e) {
+            console.error('Failed to parse stdin JSON:', e.message);
+            resolve(null);
+        }
+    });
+});
+
 if (process.argv.length < 3) {
     console.error(`Wrong number of parameters. Usage: "node export_transport_demo.js <info>"`)
     process.exit(1);
@@ -70,6 +89,12 @@ const sendDataToURL = async (url, data) => {
 }
 
 (async() => {
+    // Read stdin and add it to info
+    const stdinData = await stdinPromise;
+    if (stdinData !== null) {
+        info.stdin = stdinData;
+    }
+
     if (tOpts.url) {
         await sendDataToURL(tOpts.url, JSON.stringify(info));
         tLog.push(`data sent: ${tOpts.url}`)
