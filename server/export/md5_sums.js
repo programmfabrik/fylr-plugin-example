@@ -2,6 +2,27 @@ const fs = require('fs');
 const https = require('http');
 const crypto = require('crypto');
 
+
+// READ STDIN
+let stdinInput = '';
+process.stdin.setEncoding('utf8');
+process.stdin.on('data', (chunk) => (stdinInput += chunk));
+
+const stdinPromise = new Promise((resolve) => {
+    process.stdin.on('end', () => {
+        if (!stdinInput) {
+            resolve(null);
+            return;
+        }
+        try {
+            resolve(JSON.parse(stdinInput));
+        } catch (e) {
+            console.error('Failed to parse stdin JSON:', e.message);
+            resolve(null);
+        }
+    });
+});
+
 const getMD5FromURL = async (url) => {
     const md5sum = crypto.createHash('md5');
     return new Promise(
@@ -33,6 +54,9 @@ if (process.argv.length < 3) {
 let info = undefined
 try {
     info = JSON.parse(process.argv[2])
+    const stdinData = await stdinPromise;
+    info.stdin = stdinData
+    info.export = stdinData.export
     // console.error("info read", info)
 } catch(e) {
     console.error(`Unable to parse argument <info>`, e)
