@@ -229,6 +229,23 @@ extensions:
 # built-in callbacks which happen at certain points in the code flow of fylr server
 callbacks:
   export_transport:
+    copy_file_stdin:
+      exec:
+        timeoutSec: 60
+        service: "node"
+        commands:
+          - prog: "node"
+            # info.json does not contain "export"
+            stdin:
+              type: body
+            stdout:
+              type: body
+            args:
+              - type: "value"
+                value: "%_exec.pluginDir%/server/export_transport/copy_file.js"
+              - type: "value"
+                # info.json does not contain "export"
+                value: "%info.json%"
     copy_file:
       exec:
         timeoutSec: 60
@@ -241,6 +258,7 @@ callbacks:
               - type: "value"
                 value: "%_exec.pluginDir%/server/export_transport/copy_file.js"
               - type: "value"
+                # info.json contains "export"
                 value: "%info.json%"
     module_missing:
       exec:
@@ -285,6 +303,8 @@ callbacks:
         service: "node"
         commands:
           - prog: "node"
+            stdin:
+              type: "body"
             stdout:
               type: body
             args:
