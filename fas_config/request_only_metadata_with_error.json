@@ -1,0 +1,7 @@
+{
+    "plugin-example": {
+        "test": {
+            "error": "This didn't work"
+        }
+    }
+}

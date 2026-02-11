@@ -14,6 +14,12 @@ custommetadata:
     extensions:
       - png
       - jpg
+  - recipename: fylr_example:example_metadata:example-request-only-with-error
+    includeversions: false
+    metadata_request_only: true
+    extensions:
+      - png
+      - jpg
 
 classes:
   image:
