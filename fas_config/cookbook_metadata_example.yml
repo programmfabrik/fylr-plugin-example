@@ -19,22 +19,14 @@ recipes:
                   name: "example_metadata.json"
   example-request-only:
     class: _metadata
+    extensions:
+      - jpg
+      - exe
     metadata:
       - file: "example_metadata.json"
     displayname:
       de-DE: Beispiel Metadaten Mapping
       en-US: Example Metadaten Mapping
-    mapping:
-      exec:
-        service: node
-        commands:
-          - prog: node
-            stdout:
-              type: body
-            args:
-              - "-e"
-              - "require('fs').createReadStream(process.argv[1]).pipe(process.stdout)"
-              - "%_exec.pluginDir%/fas_config/request_only_mapping.json"
     execs:
       - service: node
         commands:
@@ -42,19 +34,12 @@ recipes:
             args:
               - "-e"
               # read request_only_metadata.json (arg 1) and write to example_metadata.json (arg 2)
-              - "console.error('Current working directory:', process.cwd()); require('fs').createReadStream(process.argv[1]).pipe(require('fs').createWriteStream(process.argv[2]));"
+              - "console.error('Current working directory:', process.cwd()); const fs = require('fs'); fs.writeFileSync(process.argv[2], fs.readFileSync(process.argv[1], 'utf8').replaceAll('_custom_', '%custom%'));"
               - "%_exec.pluginDir%/fas_config/request_only_metadata.json"
               - type: file_out
                 file:
                   name: "example_metadata.json"
-  example-request-only-with-error:
-    class: _metadata
-    metadata:
-      - file: "example_metadata.json"
-    displayname:
-      de-DE: Beispiel Metadaten Mapping (with error)
-      en-US: Example Metadaten Mapping (with error)
-    mapping:
+    dynamic:
       exec:
         service: node
         commands:
@@ -64,7 +49,15 @@ recipes:
             args:
               - "-e"
               - "require('fs').createReadStream(process.argv[1]).pipe(process.stdout)"
-              - "%_exec.pluginDir%/fas_config/request_only_mapping_with_error.json"
+              - "%_exec.pluginDir%/fas_config/recipe_dynamic_request_only.json"
+
+  example-request-only-with-error:
+    class: _metadata
+    metadata:
+      - file: "example_metadata.json"
+    displayname:
+      de-DE: Beispiel Metadaten Mapping (with error)
+      en-US: Example Metadaten Mapping (with error)
     execs:
       - service: node
         commands:
@@ -77,3 +70,15 @@ recipes:
               - type: file_out
                 file:
                   name: "example_metadata.json"
+    dynamic:
+      exec:
+        service: node
+        commands:
+          - prog: node
+            stdout:
+              type: body
+            args:
+              - "-e"
+              - "require('fs').createReadStream(process.argv[1]).pipe(process.stdout)"
+              - "%_exec.pluginDir%/fas_config/recipe_dynamic_request_only_with_error.json"
+
