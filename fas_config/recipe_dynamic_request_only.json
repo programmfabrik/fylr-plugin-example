@@ -1,8 +1,13 @@
 {
     "params": {
-        "custom": {
+        "custom_de": {
             "type": "string",
-            "description": "custom text to include in metadata",
+            "description": "custom text to include in metadata description (de-DE)",
+            "mandatory": true
+        },
+        "custom_en": {
+            "type": "string",
+            "description": "custom text to include in metadata description (en-EN)",
             "mandatory": true
         }
     },
