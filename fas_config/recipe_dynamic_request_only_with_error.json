@@ -1,0 +1,18 @@
+{
+    "mapping": {
+        "import": {
+            "fields": [
+                {
+                    "name": "dummy1",
+                    "displayname": {
+                        "de-DE": "Dummy Field 1",
+                        "en-US": "Dummy Field 1"
+                    },
+                    "error_json_import": "plugin-example.test.error",
+                    "json_import": "plugin-example.test.fields.dummy",
+                    "json_import_type": "text"
+                }
+            ]
+        }
+    }
+}

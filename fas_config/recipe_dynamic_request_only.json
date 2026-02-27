@@ -1,0 +1,56 @@
+{
+    "params": {
+        "custom_de": {
+            "type": "string",
+            "description": "custom text to include in metadata description (de-DE)",
+            "usereditable": true
+        },
+        "custom_en": {
+            "type": "string",
+            "description": "custom text to include in metadata description (en-EN)",
+            "usereditable": false
+        }
+    },
+    "mapping": {
+        "import": {
+            "fields": [
+                {
+                    "name": "filename",
+                    "displayname": {
+                        "de-DE": "Dateiname",
+                        "en-US": "Filename"
+                    },
+                    "json_import": "plugin-example.chat-gpt.fields.filename",
+                    "json_import_type": "text"
+                },
+                {
+                    "name": "title",
+                    "displayname": {
+                        "de-DE": "Titel",
+                        "en-US": "Title"
+                    },
+                    "json_import": "plugin-example.chat-gpt.fields.title",
+                    "json_import_type": "text_l10n"
+                },
+                {
+                    "name": "description",
+                    "displayname": {
+                        "de-DE": "Beschreibung",
+                        "en-US": "Description"
+                    },
+                    "json_import": "plugin-example.chat-gpt.fields.description",
+                    "json_import_type": "text_l10n"
+                },
+                {
+                    "name": "keywords",
+                    "displayname": {
+                        "de-DE": "Schlagwörter",
+                        "en-US": "Keywords"
+                    },
+                    "json_import": "plugin-example.chat-gpt.fields.keywords",
+                    "json_import_type": "text_l10n"
+                }
+            ]
+        }
+    }
+}
