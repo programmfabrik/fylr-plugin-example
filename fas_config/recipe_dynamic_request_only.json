@@ -13,6 +13,7 @@
     },
     "mapping": {
         "import": {
+            "json_error": "plugin-example.test.error",
             "fields": [
                 {
                     "name": "filename",
