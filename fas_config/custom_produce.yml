@@ -1,21 +1,26 @@
+# custommetadata defined automatically run metadata recipes per version
 custommetadata:
   - recipename: fylr_example:pdf2text_metadata:pdf2text
     extensions:
       - pdf
+    # if set, the metadata recipe is run for all renditions
     includeversions: true
-  - recipename: fylr_example:example_metadata:example
-    includeversions: true
-    extensions:
-      - png
-      - jpg
-  - recipename: fylr_example:example_metadata:example-request-only
-    includeversions: false
-    metadata_request_only: true
-    extensions:
-      - png
-      - jpg
+  # test/api/eas/plugin_metadata adds this via base config produce config
+  # - recipename: fylr_example:example_metadata:example
+  #   includeversions: true
+  #   extensions:
+  #     - png
+  #     - jpg
+  # test/api/eas/plugin_metadata adds this via base config produce config
+  # - recipename: fylr_example:example_metadata:example-request-only
+  #   includeversions: false
+  #   metadata_request_only: true
+  #   extensions:
+  #     - png
+  #     - jpg
   - recipename: fylr_example:example_metadata:example-request-only-with-error
     includeversions: false
+    # if set, this recipe is only run if a metadata mapping needs it
     metadata_request_only: true
     extensions:
       - png
@@ -33,3 +38,5 @@ classes:
         zoomable: true
         custommetadata:
           - recipename: fylr_example:example_metadata:example
+            params:
+              custom: "henk im beispiel"

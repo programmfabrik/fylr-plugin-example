@@ -9,6 +9,11 @@
             "type": "string",
             "description": "custom text to include in metadata description (en-EN)",
             "usereditable": false
+        },
+        "extra": {
+            "type": "string",
+            "description": "custom text to include in metadata description (en-EN)",
+            "usereditable": false
         }
     },
     "mapping": {
