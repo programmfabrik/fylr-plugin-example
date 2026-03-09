@@ -1,6 +1,6 @@
 (()=> {
     // produce lots of data (so that the headers are flushed out > 4K)
-    for (let i=0; i<1000000;i++) {
+    for (let i=0; i<1000;i++) {
       console.debug("data stream.... some data, doesn't matter..."+i)
     }
     console.error("This error goes to STDERR")
