@@ -1,4 +1,11 @@
 {
+    "params": {
+        "unused": {
+            "type": "string",
+            "description": "this parameter is here for testing purposes only",
+            "usereditable": true
+        }
+    },
     "mapping": {
         "import": {
             "json_error": "plugin-example.test.error",
