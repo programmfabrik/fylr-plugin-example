@@ -15,11 +15,17 @@ process.stdin.on('end', () => {
     let data;
     try {
         data = JSON.parse(input)
+        // fs.writeFileSync('/tmp/post-req', JSON.stringify(data));
         delete(data.info)
+        for (const obj of data.objects) {
+            if (obj.bounce?._version > 1 && obj.bounce?.ref) {
+                // add hint about current to "ref"
+                obj.bounce.ref += ", current version: "+obj._current?.bounce._version
+            }
+        }
     } catch(e) {
         console.error(`Could not parse input: ${e.message}`, e.stack)
         process.exit(1)
     }
-    // fs.writeFileSync('/tmp/post-req', JSON.stringify(data));
     console.log(JSON.stringify(data, "", "    "))
 })
