@@ -20,7 +20,7 @@ process.stdin.on('end', () => {
         for (const obj of data.objects) {
             if (obj.bounce?._version > 1 && obj.bounce?.ref) {
                 // add hint about current to "ref"
-                obj.bounce.ref += ", current version: "+obj._current?.bounce._version
+                obj.bounce.ref += ", old ref: "+obj._current?.bounce.ref
             }
         }
     } catch(e) {
