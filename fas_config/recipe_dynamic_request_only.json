@@ -55,6 +55,24 @@
                     },
                     "json_import": "plugin-example.chat-gpt.fields.keywords",
                     "json_import_type": "text_l10n"
+                },
+                {
+                    "name": "yes_no",
+                    "displayname": {
+                        "de-DE": "Ja / Nein",
+                        "en-US": "Yes / No"
+                    },
+                    "json_import": "plugin-example.chat-gpt.fields.yes_no",
+                    "json_import_type": "boolean"
+                },
+                {
+                    "name": "datetime",
+                    "displayname": {
+                        "de-DE": "Datetime",
+                        "en-US": "Datetime"
+                    },
+                    "json_import": "plugin-example.chat-gpt.fields.datetime",
+                    "json_import_type": "datetime"
                 }
             ]
         }
