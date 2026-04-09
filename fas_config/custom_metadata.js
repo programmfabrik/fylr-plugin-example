@@ -21,9 +21,9 @@ try {
     // 2. Get the recipe_configs object and extract the custom values
     const recipeParams = info.recipe_params || {};
 
-    const customDE = recipeParams['custom_de'] ?? '<missing custom_de>';   // fallback if not found
-    const customEN = recipeParams['custom_en'] ?? '<missing custom_en>';
-    const extra    = recipeParams['extra']     ?? '<missing extra>';
+    const customDE = recipeParams['custom_de'] ?? '';
+    const customEN = recipeParams['custom_en'] ?? '';
+    const extra    = recipeParams['extra']     ?? '';
 
     // 3. Read the template JSON (request_only_metadata.json)
     let template = fs.readFileSync(inputJsonPath, 'utf8');
