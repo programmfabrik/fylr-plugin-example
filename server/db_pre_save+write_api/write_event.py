@@ -8,23 +8,18 @@ import util
 
 def main():
 
-    orig_data = json.loads(sys.stdin.read())
+    # read the callback data from fylr
+    callback_data = json.loads(sys.stdin.read())
 
-    # get the server url
-    api_url = util.get_json_value(orig_data, 'info.api_url')
-    if api_url is None:
-        util.return_error_response('info.api_url missing!')
-    api_url += '/api/v1'
+    # get the server api url and access token
+    api_url = util.get_api_url(callback_data)
 
-    # get a session token
-    access_token = util.get_json_value(
-        orig_data, 'info.api_user_access_token')
-    if access_token is None:
-        util.return_error_response('info.api_user_access_token missing!')
+    # get the oauth2 access token for the api
+    access_token = util.get_access_token(callback_data)
 
-    objects = util.get_json_value(orig_data, 'objects')
+    objects = util.get_json_value(callback_data, 'objects')
     if not isinstance(objects, list):
-        util.return_response(orig_data)
+        util.return_response(callback_data)
 
     objecttype_count = {}
 
@@ -42,7 +37,7 @@ def main():
                 'updated': 0,
             }
 
-        version = util.get_json_value(obj, objecttype + '._version')
+        version = util.get_json_value(obj, f'{objecttype}._version')
         if version == 1:
             objecttype_count[objecttype]['inserted'] += 1
         else:
@@ -54,15 +49,19 @@ def main():
             api_url=api_url,
             path='event?background=1',
             access_token=access_token,
-            payload=util.dumpjs({
-                'event': {
-                    'type': 'EXAMPLE_PLUGIN_OBJECT_STATISTICS',
-                    'objecttype': objecttype,
-                    'info': objecttype_count[objecttype]
-                }
-            })
+            payload=json.dumps(
+                {
+                    'event': {
+                        'type': 'EXAMPLE_PLUGIN_OBJECT_STATISTICS',
+                        'objecttype': objecttype,
+                        'info': objecttype_count[objecttype],
+                    }
+                },
+                indent=4,
+            ),
         )
 
+    # return an empty objects array, this indicates to fylr that there were no changes in the objects
     util.return_response({"objects": []})
 
 
