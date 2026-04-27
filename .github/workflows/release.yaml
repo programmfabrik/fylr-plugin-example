@@ -57,3 +57,14 @@ jobs:
           files: |
             build/${{ env.ZIP_NAME }}
             README.md
+
+  test_release:
+    if: "!github.event.release.prerelease"
+    run: echo "real release"; echo "$event"
+    env:
+       event: ${{ github.event }}
+  test_prerelease:
+    if: "github.event.release.prerelease"
+    run: echo "pre-release"; echo "$event"
+    env:
+       event: ${{ github.event }}
