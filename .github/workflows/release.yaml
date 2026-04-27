@@ -62,13 +62,15 @@ jobs:
     if: "!github.event.release.prerelease"
     needs: build
     runs-on: ubuntu-latest
-    run: echo "real release"; echo "$event"
-    env:
-       event: ${{ github.event }}
+    steps:
+    - run: echo "real release"; echo "$event"
+      env:
+        event: ${{ github.event }}
   test_prerelease:
     if: "github.event.release.prerelease"
     needs: build
     runs-on: ubuntu-latest
-    run: echo "pre-release"; echo "$event"
-    env:
-       event: ${{ github.event }}
+    steps:
+    - run: echo "pre-release"; echo "$event"
+      env:
+        event: ${{ github.event }}
