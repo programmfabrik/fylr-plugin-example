@@ -63,14 +63,10 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - run: echo "real release"; echo "$event"
-      env:
-        event: ${{ github.event | marshal }}
+    - run: echo "real release"
   test_prerelease:
     if: "github.event.release.prerelease"
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - run: echo "pre-release"; echo "$event"
-      env:
-        event: ${{ github.event | marshal }}
+    - run: echo "pre-release"
