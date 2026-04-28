@@ -382,6 +382,12 @@ callbacks:
           type: objecttype
           objecttypes:
             - write_event
+      - name: "write (insert/update) an object over the api"
+        callback: write_db
+        filter:
+          type: objecttype
+          objecttypes:
+            - write_db
       - name: "bounce json back for 'bounce'"
         callback: bounce
         filter:
@@ -453,7 +459,21 @@ callbacks:
                 type: body
               args:
                 - type: value
-                  value: "%_exec.pluginDir%/server/db_pre_save+write_event/write_event.py"
+                  value: "%_exec.pluginDir%/server/db_pre_save+write_api/write_event.py"
+      write_db:
+        exec:
+          service: python3
+          commands:
+            - prog: python3
+              stdin:
+                type: body
+              stderr:
+                type: body
+              stdout:
+                type: body
+              args:
+                - type: value
+                  value: "%_exec.pluginDir%/server/db_pre_save+write_api/write_db.py"
       check:
         exec:
           service: "node"
