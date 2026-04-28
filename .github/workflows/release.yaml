@@ -1,16 +1,17 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - "v*.*.*"
+  release:
+    types:
+    - published
+    - edited
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: recursive
 
@@ -18,7 +19,7 @@ jobs:
         run: mkdir -p /home/runner/.npm; touch /home/runner/package-lock.json
         continue-on-error: true
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v6
         with:
           node-version: 14
           cache: 'npm'
@@ -28,7 +29,7 @@ jobs:
           sudo npm install -g coffeescript@1.12.7
 
       - name: Install golang
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v6
         with:
           go-version: "1.23"
 
@@ -49,7 +50,7 @@ jobs:
         run: make zip
 
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         with:
           name: Release ${{ steps.get_version.outputs.VERSION }}
           draft: true
@@ -57,3 +58,16 @@ jobs:
           files: |
             build/${{ env.ZIP_NAME }}
             README.md
+
+  test_release:
+    if: "!github.event.release.prerelease"
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo "real release"
+  test_prerelease:
+    if: "github.event.release.prerelease"
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo "pre-release"
