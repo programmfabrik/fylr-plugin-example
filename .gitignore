@@ -4,3 +4,4 @@ webfrontend/FylrExampleCustomDataType.coffee.js
 webfrontend/FylrExampleTransition.coffee.js
 webfrontend/ExampleDetailSidebarPlugin.coffee.js
 .DS_Store
+build-info.json
