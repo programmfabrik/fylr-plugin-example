@@ -1,0 +1,11 @@
+{
+    "plugin-example": {
+        "chat-gpt": {
+            "fields": {
+                "filename": "",
+                "description": "",
+                "title": ""
+            }
+        }
+    }
+}

@@ -55,6 +55,46 @@ recipes:
               - "require('fs').createReadStream(process.argv[1]).pipe(process.stdout)"
               - "%_exec.pluginDir%/fas_config/recipe_dynamic_request_only.json"
 
+  # example-request-only-empty mirrors example-request-only but writes a
+  # metadata JSON where every field is an empty string. Used by ticket
+  # 79607's apitest to drive the "recipe ran but delivered no data" path
+  # without needing the ai-metadata plugin in CI: any mapping that targets
+  # a custom-data-type sub-field through this recipe will see an empty
+  # value flow through the recipe loop in file_metadata.go, which was
+  # silently clearing the existing CDT (e.g. weblink.url) before the fix.
+  example-request-only-empty:
+    class: _metadata
+    metadata:
+      - file: "example_metadata.json"
+    displayname:
+      de-DE: Beispiel Metadaten Mapping (empty)
+      en-US: Example Metadaten Mapping (empty)
+    execs:
+      - service: node
+        commands:
+          - prog: node
+            args:
+              - "-e"
+              # copy request_only_empty_metadata.json (arg 1) verbatim into example_metadata.json (arg 2)
+              - "require('fs').createReadStream(process.argv[1]).pipe(require('fs').createWriteStream(process.argv[2]));"
+              - "%_exec.pluginDir%/fas_config/request_only_empty_metadata.json"
+              - type: file_out
+                file:
+                  name: "example_metadata.json"
+    # dynamic.exec serves the field schema (filename/title/description/...);
+    # same shape as example-request-only so existing mapping field names work.
+    dynamic:
+      exec:
+        service: node
+        commands:
+          - prog: node
+            stdout:
+              type: body
+            args:
+              - "-e"
+              - "require('fs').createReadStream(process.argv[1]).pipe(process.stdout)"
+              - "%_exec.pluginDir%/fas_config/recipe_dynamic_request_only.json"
+
   example-request-only-with-error:
     class: _metadata
     metadata:

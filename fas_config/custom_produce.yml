@@ -25,6 +25,15 @@ custommetadata:
     extensions:
       - png
       - jpg
+  - recipename: fylr_example:example_metadata:example-request-only-empty
+    includeversions: false
+    # request-only: the recipe runs lazily, only when a metadata mapping
+    # actually references it. Used by ticket 79607's apitest to drive the
+    # "recipe ran but delivered no data" path without the ai-metadata plugin.
+    metadata_request_only: true
+    extensions:
+      - png
+      - jpg
 
 classes:
   image:
