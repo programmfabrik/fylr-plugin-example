@@ -126,3 +126,38 @@ recipes:
               - "require('fs').createReadStream(process.argv[1]).pipe(process.stdout)"
               - "%_exec.pluginDir%/fas_config/recipe_dynamic_request_only_with_error.json"
 
+  # example-recipe-variables is a dynamic recipe whose parameters come from the
+  # plugin's recipe_test.recipe_variables base config table: one string
+  # parameter per row, keyed on the row's "name". A blank/empty name yields a
+  # nameless parameter, which the server's strict save-time validation rejects
+  # and the load path drops. Used by the #79654 apitests.
+  example-recipe-variables:
+    class: _metadata
+    metadata:
+      - file: "example_metadata.json"
+    displayname:
+      de-DE: Beispiel Rezept Variablen
+      en-US: Example Recipe Variables
+    execs:
+      - service: node
+        commands:
+          - prog: node
+            args:
+              - "-e"
+              - "require('fs').writeFileSync(process.argv[1], '{}')"
+              - type: file_out
+                file:
+                  name: "example_metadata.json"
+    dynamic:
+      exec:
+        service: node
+        commands:
+          - prog: node
+            stdout:
+              type: body
+            args:
+              - type: "value"
+                value: "%_exec.pluginDir%/fas_config/recipe_dynamic_variables.js"
+              - type: "value"
+                value: "%info.json%"
+

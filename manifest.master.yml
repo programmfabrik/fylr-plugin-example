@@ -568,6 +568,43 @@ base_config:
       default_true:
         type: bool
         default: true
+  # mandatory_example demonstrates (and apitests) the server-side "mandatory"
+  # enforcement: required_text must be set, and the required_table's "name"
+  # column must be set in every row, or saving the base config fails. See #79654.
+  - name: mandatory_example
+    parameters:
+      required_text:
+        type: text
+        mandatory: true
+        position: 0
+      required_table:
+        type: table
+        position: 1
+        fields:
+          - name: name
+            type: text
+            mandatory: true
+            position: 0
+          - name: note
+            type: text
+            position: 1
+  # recipe_test feeds the example-recipe-variables dynamic recipe: each row of
+  # recipe_variables becomes a recipe parameter keyed on its "name". A blank
+  # name makes the recipe report a nameless parameter, which the server rejects
+  # at save (strict dynamic-recipe validation). The "name" column is NOT
+  # mandatory here on purpose, so the empty-name reaches the recipe. See #79654.
+  - name: recipe_test
+    parameters:
+      recipe_variables:
+        type: table
+        position: 0
+        fields:
+          - name: name
+            type: text
+            position: 0
+          - name: note
+            type: text
+            position: 1
 
 system_rights:
   - name: example_right
