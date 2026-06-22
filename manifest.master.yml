@@ -612,6 +612,11 @@ custom_types:
         type: double
       geofield:
         type: geo_json
+      # Indexed in OpenSearch like a normal text subfield, but kept out of the
+      # suggest term tables (term/object_term) via skipTerms.
+      skiptermsfield:
+        type: text_oneline
+        skipTerms: true
     config:
       schema:
         - name: fylr_example_config
