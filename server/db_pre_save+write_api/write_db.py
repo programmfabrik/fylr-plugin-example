@@ -39,25 +39,38 @@ def main():
 
         # create a new "linked_object" payload
         # and post it to the api/v1/db endpoint
+        payload = json.dumps(
+            [
+                {
+                    '_comment': '<inserted by fylr-plugin-example>',
+                    '_mask': "_all_fields",
+                    '_objecttype': "linked_object",
+                    "linked_object": {
+                        "_version": 1,
+                        "name": title,
+                    },
+                }
+            ],
+            indent=4,
+        )
         resp_text, statuscode = util.post_to_api(
             api_url=api_url,
             path='db/linked_object',
             access_token=access_token,
-            payload=json.dumps(
-                [
-                    {
-                        '_comment': '<inserted by fylr-plugin-example>',
-                        '_mask': "_all_fields",
-                        '_objecttype': "linked_object",
-                        "linked_object": {
-                            "_version": 1,
-                            "name": title,
-                        },
-                    }
-                ],
-                indent=4,
-            ),
+            payload=payload,
         )
+        if statuscode == 423:
+            # DatabaseLockError: on a single-writer backend (sqlite) a second
+            # connection cannot write while the save's transaction is open.
+            # Retry INSIDE that transaction over api_tx_url (fylr #80077).
+            api_tx_url = util.get_json_value(callback_data, 'info.api_tx_url')
+            if api_tx_url:
+                resp_text, statuscode = util.post_to_api(
+                    api_url=api_tx_url,
+                    path='db/linked_object',
+                    access_token=access_token,
+                    payload=payload,
+                )
         if statuscode != 200:
             # could not insert the new linked object -> api error
             util.return_error_response(
