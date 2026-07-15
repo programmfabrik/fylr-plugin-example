@@ -32,7 +32,10 @@ code: $(JS) go ## build Coffeescript + Go code
 go:
 	$(MAKE) -C server/extension/hello build
 
-zip: build ## build zip file for publishing
+readme: build ## inline the README's images into a self-contained build README.md
+	go run github.com/programmfabrik/fylr-build-plugin@v0.1.0 readme --in README.md --out $(BUILD_DIR)/$(PLUGIN_NAME)/README.md
+
+zip: readme ## build zip file for publishing
 	cd $(BUILD_DIR) && zip $(ZIP_NAME) -r $(PLUGIN_NAME)
 
 clean: ## clean build files
