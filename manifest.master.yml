@@ -435,6 +435,18 @@ callbacks:
           type: objecttype
           objecttypes:
             - write_db
+      - name: "write an object INTO the request's open transaction (api_tx_url, fylr #80077)"
+        callback: write_db_tx
+        filter:
+          type: objecttype
+          objecttypes:
+            - write_db_tx
+      - name: "same, but as the configured plugin_user (api_tx_url + plugin_user, fylr #80077)"
+        callback: write_db_tx_pu
+        filter:
+          type: objecttype
+          objecttypes:
+            - write_db_tx_pu
       - name: "bounce json back for 'bounce'"
         callback: bounce
         filter:
@@ -539,6 +551,36 @@ callbacks:
               args:
                 - type: value
                   value: "%_exec.pluginDir%/server/db_pre_save+write_api/write_db.py"
+      write_db_tx:
+        exec:
+          service: python3
+          commands:
+            - prog: python3
+              stdin:
+                type: body
+              stderr:
+                type: body
+              stdout:
+                type: body
+              args:
+                - type: value
+                  value: "%_exec.pluginDir%/server/db_pre_save+write_api/write_db_tx.py"
+      write_db_tx_pu:
+        plugin_user:
+          base_config: "user.api_user"
+        exec:
+          service: python3
+          commands:
+            - prog: python3
+              stdin:
+                type: body
+              stderr:
+                type: body
+              stdout:
+                type: body
+              args:
+                - type: value
+                  value: "%_exec.pluginDir%/server/db_pre_save+write_api/write_db_tx_pu.py"
       check:
         exec:
           service: "node"
