@@ -44,6 +44,52 @@ def main():
         if not title:
             continue
 
+        # fail-on-error contract check (fylr #80077): a title starting with
+        # "fail_swallowed" makes this callback write the same linked object
+        # TWICE — the first insert lands in the open transaction, the second
+        # violates the unique key on linked_object.name — and then SWALLOW the
+        # error, reporting the callback as successful. fylr must refuse to
+        # commit the save anyway: the failed write marks the joined
+        # transaction failed, so neither the saved object nor the first
+        # insert may become durable.
+        if title.startswith('fail_swallowed'):
+            payload = json.dumps(
+                [
+                    {
+                        '_comment': '<inserted by fylr-plugin-example (tx, to be rolled back)>',
+                        '_mask': "_all_fields",
+                        '_objecttype': "linked_object",
+                        "linked_object": {
+                            "_version": 1,
+                            "name": title,
+                        },
+                    }
+                ],
+                indent=4,
+            )
+            resp_text, statuscode = util.post_to_api(
+                api_url=api_tx_url,
+                path='db/linked_object',
+                access_token=access_token,
+                payload=payload,
+            )
+            if statuscode != 200:
+                util.return_error_response(
+                    f'fail_swallowed: first insert failed unexpectedly (code {statuscode}): {resp_text}'
+                )
+            resp_text, statuscode = util.post_to_api(
+                api_url=api_tx_url,
+                path='db/linked_object',
+                access_token=access_token,
+                payload=payload,
+            )
+            if statuscode == 200:
+                util.return_error_response(
+                    'fail_swallowed: duplicate insert unexpectedly succeeded, unique key on linked_object.name missing?'
+                )
+            # swallow the failed write on purpose and report success
+            continue
+
         resp_text, statuscode = util.post_to_api(
             api_url=api_tx_url,
             path='db/linked_object',
