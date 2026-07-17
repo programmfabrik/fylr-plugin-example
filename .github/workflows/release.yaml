@@ -1,10 +1,17 @@
+# Release workflow for a PUBLIC fylr plugin: a manager publishes a release on
+# the GitHub release page (tag vX.Y.Z), this builds the plugin zip and attaches
+# it — the asset URL (releases/latest/download/...) is what fylr installs from.
+#
+# This is the canonical public-plugin workflow; the private-plugin variant
+# (GitHub Pages delivery under an unguessable URL) and the seal toggle live in
+# fylr-build-plugin/templates/.
 name: Release
 
 on:
   release:
     types:
-    - published
-    - edited
+      - published
+      - edited
 
 jobs:
   build:
@@ -12,62 +19,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-        with:
-          submodules: recursive
-
-      - name: Fix post run npm cleanup
-        run: mkdir -p /home/runner/.npm; touch /home/runner/package-lock.json
-        continue-on-error: true
 
       - uses: actions/setup-node@v6
         with:
-          node-version: 14
-          cache: 'npm'
+          node-version: 22
 
-      - name: Install dependencies
-        run: |
-          sudo npm install -g coffeescript@1.12.7
+      - name: Install CoffeeScript and sass
+        run: sudo npm install -g coffeescript@1.12.7 sass
 
       - name: Install golang
         uses: actions/setup-go@v6
         with:
-          go-version: "1.23"
+          go-version: "1.26"
 
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-        shell: bash
-
-      - name: Extract repository name
-        run: echo "REPOSITORY_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
-        shell: bash
-
-      - name: Set zip file env name
-        run: echo "ZIP_NAME=${{env.REPOSITORY_NAME}}.zip" >> $GITHUB_ENV
-
-      - name: Build and Package
-        shell: bash
+      - name: Build and package
         run: make zip
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          ZIP_NAME: ${{ github.event.repository.name }}.zip
 
-      - name: Release
+      - name: Attach plugin zip to the release
         uses: softprops/action-gh-release@v3
         with:
-          name: Release ${{ steps.get_version.outputs.VERSION }}
-          draft: true
-          generate_release_notes: true
           files: |
-            build/${{ env.ZIP_NAME }}
-            README.md
-
-  test_release:
-    if: "!github.event.release.prerelease"
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - run: echo "real release"
-  test_prerelease:
-    if: "github.event.release.prerelease"
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - run: echo "pre-release"
+            build/${{ github.event.repository.name }}.zip

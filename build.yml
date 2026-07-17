@@ -1,0 +1,59 @@
+# Build configuration for fylr-build-plugin. Delivered files are listed
+# EXPLICITLY here — nothing is derived from the manifest, since a derived list
+# is easily incomplete. The safety net is "check" (runs with every build): it
+# validates the assembled build folder against every path manifest.yml
+# references, so a missing entry here fails the build.
+
+server:
+  # server-side delivery: files/dirs copied verbatim into build/fylr_example/
+  install:
+    - server
+    - fas_config
+    - l10n
+    - customDataTypeUpdater
+  # Go server extensions, cross-compiled per arch into "exe" (%GOOS% and
+  # %GOARCH% are replaced); sources do not ship
+  go:
+    # each entry sets Go's GOOS/GOARCH build environment; archs is optional —
+    # without it, every platform fylr runs on is built
+    archs:
+      - { GOOS: linux, GOARCH: amd64 }
+      - { GOOS: linux, GOARCH: arm64 }
+      - { GOOS: darwin, GOARCH: amd64 }
+      - { GOOS: darwin, GOARCH: arm64 }
+      - { GOOS: windows, GOARCH: amd64 }
+      - { GOOS: windows, GOARCH: arm64 }
+    modules:
+      - dir: server/extension/hello
+        exe: server/extension/hello/hello-%GOOS%-%GOARCH%.exe
+
+webfrontend:
+  # CoffeeScript 1.x (the version the plugins are stuck on, hence the key),
+  # compiled + concatenated IN THIS ORDER into plugin.webfrontend.url
+  # (webfrontend/FylrExample.js)
+  coffee1:
+    - webfrontend/FylrExampleCustomDataType.coffee
+    - webfrontend/ExampleDetailSidebarPlugin.coffee
+    - webfrontend/FylrExampleCustomDatamodelSettings.coffee
+    - webfrontend/FylrExampleTransition.coffee
+    - webfrontend/FylrExampleExportPluginSleep.coffee
+  # SCSS, compiled to same-named .css files
+  scss:
+    - webfrontend/FylrExampleScssDemo.scss
+  # webfrontend files delivered as-is: plain css, html, images, fonts, ...
+  install:
+    - webfrontend/FylrExample.css
+    - webfrontend/FylrExample.html
+    - webfrontend/dump.css
+
+loca:
+  # mastered in the "fylr localization" Google Sheet, tab "fylr-plugin-example"
+  - csv: l10n/example-loca.csv
+    sheet: 1L0TusEEmerNqAW8k6w3893kcYjjpDi3OSoeKsOaPB4U
+    gid: "952340193"
+
+# NOTE: "check" (runs with every build) warns about two manifest references,
+# server/export/_missing_.js and server/export_transport/_missing_.js. They
+# are absent ON PURPOSE: fylr's export apitests call
+# fylr_example:module_missing (test/api/export/normal/...) to assert the
+# server's behavior when a plugin callback program is missing.

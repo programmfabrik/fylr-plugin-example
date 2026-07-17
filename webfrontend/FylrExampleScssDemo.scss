@@ -1,0 +1,11 @@
+// SCSS demo: listed in build.yml webfrontend.scss, compiled by
+// fylr-build-plugin to FylrExampleScssDemo.css in the build folder.
+$example-accent: #227700;
+
+.fylr-example-scss-demo {
+    color: $example-accent;
+
+    .nested {
+        border-bottom: 1px solid $example-accent;
+    }
+}

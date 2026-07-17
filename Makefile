@@ -1,52 +1,44 @@
-COFFEE_FILES = \
-	webfrontend/FylrExampleCustomDataType.coffee \
-	webfrontend/ExampleDetailSidebarPlugin.coffee \
-	webfrontend/FylrExampleCustomDatamodelSettings.coffee \
-	webfrontend/FylrExampleTransition.coffee \
-	webfrontend/FylrExampleExportPluginSleep.coffee
+# fylr plugins are built by fylr-build-plugin, the build driver that knows how
+# a fylr plugin is put together (compile, assemble build/, zip, seal, loca).
+# This Makefile is a thin shim for muscle memory — all logic lives in the
+# tool. @latest always resolves the tool's newest release, so plugins pick up
+# fixes without being touched; an incompatible tool change would come as a new
+# major version (import path .../v2), which is the only event that changes
+# this line.
+#
+# Tools needed (each only for the features this plugin uses):
+#   go       runs fylr-build-plugin + compiles the hello extension — https://go.dev/dl/
+#   coffee   CoffeeScript 1.x:  npm install -g coffeescript@1.12.7
+#   sass     npm install -g sass
+FYLR_BUILD_PLUGIN ?= go run github.com/programmfabrik/fylr-build-plugin@latest
 
-JS = webfrontend/FylrExample.js
-
-PLUGIN_NAME = fylr_example
-ZIP_NAME ?= $(PLUGIN_NAME).zip
-BUILD_DIR = build
+# The tool itself reads NO environment variables — everything is passed as
+# flags. The release workflow's RELEASE_TAG / ZIP_NAME env is translated into
+# flags right here.
+RELEASE_FLAGS = $(if $(RELEASE_TAG),-release "$(RELEASE_TAG)")
+ZIP_FLAGS = $(RELEASE_FLAGS) $(if $(ZIP_NAME),-out "$(ZIP_NAME)")
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 all: build ## build all
 
-build: clean code ## build all (creates build folder)
-	mkdir -p $(BUILD_DIR)/$(PLUGIN_NAME)
-	cp manifest.master.yml $(BUILD_DIR)/$(PLUGIN_NAME)/manifest.yml
-	cp -r server l10n fas_config customDataTypeUpdater $(BUILD_DIR)/$(PLUGIN_NAME)
-# remove Go stuff
-	rm -rf $(BUILD_DIR)/$(PLUGIN_NAME)/server/extension/hello/*
-	cp -r server/extension/hello/*.exe $(BUILD_DIR)/$(PLUGIN_NAME)/server/extension/hello
+build: ## build the plugin into build/<name>/ — loadable by fylr via plugin.paths
+	$(FYLR_BUILD_PLUGIN) build $(RELEASE_FLAGS)
 
-	mkdir -p $(BUILD_DIR)/$(PLUGIN_NAME)/webfrontend
-	cp -r $(JS) webfrontend/FylrExample.html webfrontend/*.css $(BUILD_DIR)/$(PLUGIN_NAME)/webfrontend
+zip: ## build the release zip
+	$(FYLR_BUILD_PLUGIN) zip $(ZIP_FLAGS)
 
-code: $(JS) go ## build Coffeescript + Go code
+seal: ## build + seal the release zip (fylr dev/CI key unless -pubkey is passed to the tool)
+	$(FYLR_BUILD_PLUGIN) seal $(RELEASE_FLAGS)
 
-go:
-	$(MAKE) -C server/extension/hello build
+loca: ## pull the loca CSV from its Google Sheets master (build.yml)
+	$(FYLR_BUILD_PLUGIN) loca
 
-readme: build ## inline the README's images into a self-contained build README.md
-	go run github.com/programmfabrik/fylr-build-plugin@v0.1.0 readme --in README.md --out $(BUILD_DIR)/$(PLUGIN_NAME)/README.md
-
-zip: readme ## build zip file for publishing
-	cd $(BUILD_DIR) && zip $(ZIP_NAME) -r $(PLUGIN_NAME)
+check: ## validate the build tree against the manifest
+	$(FYLR_BUILD_PLUGIN) check
 
 clean: ## clean build files
-	rm -f $(JS)
-	rm -rf $(BUILD_DIR)
-	$(MAKE) -C server/extension/hello clean
+	$(FYLR_BUILD_PLUGIN) clean
 
-${JS}: $(subst .coffee,.coffee.js,${COFFEE_FILES})
-	mkdir -p $(dir $@)
-	cat $^ > $@
-
-%.coffee.js: %.coffee
-	coffee -b -p --compile "$^" > "$@" || ( rm -f "$@" ; false )
-
+.PHONY: help all build zip seal loca check clean
