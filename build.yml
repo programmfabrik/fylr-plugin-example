@@ -37,6 +37,10 @@ webfrontend:
     - webfrontend/FylrExampleCustomDatamodelSettings.coffee
     - webfrontend/FylrExampleTransition.coffee
     - webfrontend/FylrExampleExportPluginSleep.coffee
+  # plain JS, appended to that same bundle verbatim and in this order — a
+  # vendored library that is not CoffeeScript (see the file's header)
+  js:
+    - webfrontend/lib/example-lib.js
   # SCSS, compiled to same-named .css files
   scss:
     - webfrontend/FylrExampleScssDemo.scss

@@ -38,8 +38,9 @@ class DetailSidebarRender extends DetailSidebarPlugin
 			language: ez5.session.frontend_language
 			access_token: ez5.session.token
 
-		for optName, optValue of opts
-			baseUrl+= "#{optName}=#{optValue}&"
+		# from the vendored webfrontend/lib/example-lib.js (build.yml
+		# webfrontend.js), which is appended after this compiled file
+		baseUrl+= ez5.FylrExampleLib.buildQuery(opts)
 
 		window.open(baseUrl,"", "width=640, height=800").focus();
 

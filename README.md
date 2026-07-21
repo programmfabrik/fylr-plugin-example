@@ -19,8 +19,9 @@ make clean
 ```
 
 [build.yml](./build.yml) is the explicit build description — server and
-webfrontend delivery lists, CoffeeScript bundle order, SCSS, Go extensions,
-the loca sheet — and exercises every fylr-build-plugin feature. The safety
+webfrontend delivery lists, CoffeeScript bundle order, a vendored plain-JS
+library appended to that bundle, SCSS, Go extensions, the loca sheet — and
+exercises every fylr-build-plugin feature. The safety
 net against an incomplete list is `check` (runs with every build): it warns
 about every path `manifest.yml` references that is missing from the build
 folder (this plugin triggers two such warnings on purpose, see build.yml).
