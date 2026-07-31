@@ -37,6 +37,7 @@ webfrontend:
     - webfrontend/FylrExampleCustomDatamodelSettings.coffee
     - webfrontend/FylrExampleTransition.coffee
     - webfrontend/FylrExampleExportPluginSleep.coffee
+    - webfrontend/FylrExampleSearchToolPlugin.coffee
   # plain JS, appended to that same bundle verbatim and in this order — a
   # vendored library that is not CoffeeScript (see the file's header)
   js:
