@@ -38,10 +38,11 @@ jobs:
         run: make zip
         env:
           RELEASE_TAG: ${{ github.event.release.tag_name }}
-          ZIP_NAME: ${{ github.event.repository.name }}.zip
 
       - name: Attach plugin zip to the release
         uses: softprops/action-gh-release@v3
         with:
+          # fylr-build-plugin names the zip after the repository, and writes
+          # the historical aliases from build.yml beside it
           files: |
-            build/${{ github.event.repository.name }}.zip
+            build/*.zip
