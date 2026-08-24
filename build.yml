@@ -27,21 +27,26 @@ server:
       - dir: server/extension/hello
         exe: server/extension/hello/hello-%GOOS%-%GOARCH%.exe
 
+# The npm dependencies of the node extensions (package.json) need no key: the
+# build resolves every require of a node program the manifest runs into the
+# delivered file, because node_modules never ships. server/extension/npm_dep.js
+# is the one exercising it here.
+
 webfrontend:
-  # CoffeeScript 1.x (the version the plugins are stuck on, hence the key),
-  # compiled + concatenated IN THIS ORDER into plugin.webfrontend.url
-  # (webfrontend/FylrExample.js)
-  coffee1:
-    - webfrontend/FylrExampleCustomDataType.coffee
-    - webfrontend/ExampleDetailSidebarPlugin.coffee
-    - webfrontend/FylrExampleCustomDatamodelSettings.coffee
-    - webfrontend/FylrExampleTransition.coffee
-    - webfrontend/FylrExampleExportPluginSleep.coffee
-    - webfrontend/FylrExampleSearchToolPlugin.coffee
-  # plain JS, appended to that same bundle verbatim and in this order — a
-  # vendored library that is not CoffeeScript (see the file's header)
-  js:
-    - webfrontend/lib/example-lib.js
+  # assembled into plugin.webfrontend.url (webfrontend/FylrExample.js) — no
+  # "out", the manifest names the file. Sources are taken IN THIS ORDER,
+  # each handled by its extension: .coffee compiled (CoffeeScript 1.x, the
+  # version the plugins are stuck on), anything else verbatim. The vendored
+  # library comes first, before the code that uses it (see the file's header).
+  bundles:
+    - sources:
+        - webfrontend/lib/example-lib.js
+        - webfrontend/FylrExampleCustomDataType.coffee
+        - webfrontend/ExampleDetailSidebarPlugin.coffee
+        - webfrontend/FylrExampleCustomDatamodelSettings.coffee
+        - webfrontend/FylrExampleTransition.coffee
+        - webfrontend/FylrExampleExportPluginSleep.coffee
+        - webfrontend/FylrExampleSearchToolPlugin.coffee
   # SCSS, compiled to same-named .css files
   scss:
     - webfrontend/FylrExampleScssDemo.scss
