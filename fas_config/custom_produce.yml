@@ -34,6 +34,15 @@ custommetadata:
     extensions:
       - png
       - jpg
+  - recipename: fylr_example:example_metadata:example-request-only-with-warnings
+    includeversions: false
+    # request-only: the recipe runs lazily, only when a metadata mapping
+    # actually references it. Drives the json_warnings path (#80512) for
+    # fylr's apitest, which needs no licensed plugin for it.
+    metadata_request_only: true
+    extensions:
+      - png
+      - jpg
 
 classes:
   image:

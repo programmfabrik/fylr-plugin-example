@@ -1,0 +1,13 @@
+{
+    "plugin-example": {
+        "test": {
+            "warnings": [
+                "the recipe ran, but the sky was the wrong colour",
+                "and the cat sat on the keyboard"
+            ],
+            "fields": {
+                "dummy": "value from the warning recipe"
+            }
+        }
+    }
+}
