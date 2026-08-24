@@ -1,0 +1,8 @@
+{
+  "name": "fylr-plugin-example",
+  "private": true,
+  "description": "npm dependencies of the example plugin's node extensions — resolved into the delivered files by fylr-build-plugin",
+  "dependencies": {
+    "dayjs": "^1.11.13"
+  }
+}

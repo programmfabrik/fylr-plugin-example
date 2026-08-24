@@ -211,6 +211,21 @@ extensions:
             - type: "value"
               value: "%_exec.pluginDir%/server/db_pre_save+webhook/check.js"
 
+  # a node program with an npm dependency: package.json declares it, the build
+  # resolves the require into the delivered file (#80732)
+  dump/npm:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdout:
+            type: "body"
+          args:
+            - type: "value"
+              value: "%_exec.pluginDir%/server/extension/npm_dep.js"
+            - type: "value"
+              value: "%info.json%"
+
   render/standard_extended:
     exec:
       service: "python3"
