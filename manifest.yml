@@ -211,6 +211,23 @@ extensions:
             - type: "value"
               value: "%_exec.pluginDir%/server/db_pre_save+webhook/check.js"
 
+  # answers a db_pre_save webhook according to the "mode" in its query, to test
+  # the "base fields only" callback contract (fylr #71755)
+  webhook/base_fields_only:
+    exec:
+      service: "node"
+      commands:
+        - prog: "node"
+          stdin:
+            type: "body"
+          stdout:
+            type: "body"
+          args:
+            - type: "value"
+              value: "%_exec.pluginDir%/server/db_pre_save+webhook/base_fields_only.js"
+            - type: "value"
+              value: "%info.json%"
+
   # a node program with an npm dependency: package.json declares it, the build
   # resolves the require into the delivered file (#80732)
   dump/npm:
@@ -414,6 +431,20 @@ callbacks:
             args:
               - type: "value"
                 value: "%_exec.pluginDir%/server/db_pre_save+webhook/check.js"
+    # same script as the webhook extension above, reached as a transition
+    # action instead: "mode" arrives in the action info (fylr #71755)
+    base_fields_only:
+      exec:
+        service: "node"
+        commands:
+          - prog: "node"
+            stdin:
+              type: body
+            stdout:
+              type: body
+            args:
+              - type: "value"
+                value: "%_exec.pluginDir%/server/db_pre_save+webhook/base_fields_only.js"
     # token_check: calls back into the API with the api_user token; fails the
     # transition if the token is rejected (fylr apitests for #79926)
     token_check:
