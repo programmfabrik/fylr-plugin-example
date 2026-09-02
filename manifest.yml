@@ -544,6 +544,10 @@ callbacks:
                 - type: value
                   value: "%_exec.pluginDir%/server/db_pre_save+write_api/token_check.py"
       bounce:
+        # plugin_user without base_config is a no-op: base_config is the only
+        # key fylr reads in this block, "optional" is not part of the schema and
+        # the lenient manifest parser drops it silently. bounce runs with the
+        # api_user token only - no plugin_user / plugin_user_access_token.
         plugin_user:
           optional: true
         exec:
