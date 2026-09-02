@@ -6,6 +6,8 @@
 //
 // The mode of this script is picked with "mode":
 //   probe   report the received base_fields_only flag in _comment (storable)
+//   probe_standard
+//           report the received _standard (and _current's) in _comment
 //   field   answer with a field value             (fylr must reject in bfo mode)
 //   parent  answer with a parent edge             (fylr must reject in bfo mode)
 //   tags    answer with _tags                     (storable, must be accepted)
@@ -77,6 +79,17 @@ process.stdin.on('end', () => {
                 // read the flag the callback was given back out of the record
                 obj._comment = `base_fields_only=${baseFieldsOnly}`
                 break
+            case "probe_standard": {
+                // the title fylr rendered for the object and for its current
+                // version (bag 1, first language), so the test can check it is
+                // the record's and not a placeholder
+                const text = (std) => {
+                    const t = std?.["1"]?.text
+                    return t ? t[Object.keys(t)[0]] : ""
+                }
+                obj._comment = `standard=${text(obj._standard)} current=${text(obj._current?._standard)}`
+                break
+            }
             case "field":
                 obj[ot][param("field", "title")] =
                     param("value", "set by the callback")
