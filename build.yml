@@ -26,6 +26,17 @@ server:
     modules:
       - dir: server/extension/hello
         exe: server/extension/hello/hello-%GOOS%-%GOARCH%.exe
+  # Python packages of the python3 programs in a folder: resolved for the fylr
+  # image and delivered with ALL their dependencies into that folder, where
+  # Python looks first — nothing is installed on the instance. Only
+  # pure-Python packages ship; a compiled one comes from the fylr image (numpy
+  # here, which trimesh needs). server/extension/python_dep/python_dep.py is
+  # the one exercising it.
+  python:
+    - dir: server/extension/python_dep
+      packages:
+        - python-slugify
+        - trimesh
 
 # The npm dependencies of the node extensions (package.json) need no key: the
 # build resolves every require of a node program the manifest runs into the

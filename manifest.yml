@@ -243,6 +243,21 @@ extensions:
             - type: "value"
               value: "%info.json%"
 
+  # a python3 program with Python packages: build.yml lists them for its
+  # folder, the build delivers them with their dependencies into it (#81675)
+  dump/python:
+    exec:
+      service: "python3"
+      commands:
+        - prog: "python3"
+          stdout:
+            type: "body"
+          args:
+            - type: "value"
+              value: "%_exec.pluginDir%/server/extension/python_dep/python_dep.py"
+            - type: "value"
+              value: "%info.json%"
+
   render/standard_extended:
     exec:
       service: "python3"

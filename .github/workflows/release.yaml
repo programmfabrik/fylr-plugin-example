@@ -34,6 +34,11 @@ jobs:
           # a plugin repo has no go.mod for the dependency cache to key on
           cache: false
 
+      # the Python packages of server/extension/python_dep (build.yml
+      # server.python) are resolved with uv
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.2.0
+
       - name: Build and package
         run: make zip
         env:
