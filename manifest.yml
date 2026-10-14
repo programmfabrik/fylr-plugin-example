@@ -1,6 +1,5 @@
 plugin:
   name: fylr_example
-  version: "2"
   l10n: l10n/example-loca.csv
   webfrontend:
     url: FylrExample.js
@@ -29,6 +28,7 @@ extensions:
             - type: "value"
               value: "%_exec.pluginDir%/server/extension/empty.js"
 
+  # without a stdout, the extension answers with the execserver's job report
   dump/empty2:
     exec:
       service: "node"
@@ -263,7 +263,7 @@ callbacks:
   export_transport:
     copy_file_stdin:
       exec:
-        timeoutSec: 60
+        timeout: "1m"
         service: "node"
         commands:
           - prog: "node"
@@ -280,7 +280,7 @@ callbacks:
                 value: "%info.json%"
     copy_file:
       exec:
-        timeoutSec: 60
+        timeout: "1m"
         service: "node"
         commands:
           - prog: "node"
@@ -294,7 +294,7 @@ callbacks:
                 value: "%info.json%"
     module_missing:
       exec:
-        timeoutSec: 120
+        timeout: "2m"
         service: "node"
         commands:
           - prog: "node"
@@ -305,7 +305,7 @@ callbacks:
                 value: "%_exec.pluginDir%/server/export_transport/_missing_.js"
     error:
       exec:
-        timeoutSec: 60
+        timeout: "1m"
         service: "node"
         commands:
           - prog: "node"
@@ -320,7 +320,7 @@ callbacks:
   export:
     module_missing:
       exec:
-        timeoutSec: 120
+        timeout: "2m"
         service: "node"
         commands:
           - prog: "node"
@@ -331,7 +331,7 @@ callbacks:
                 value: "%_exec.pluginDir%/server/export/_missing_.js"
     md5_sums:
       exec:
-        timeoutSec: 120
+        timeout: "2m"
         service: "node"
         commands:
           - prog: "node"
@@ -348,7 +348,7 @@ callbacks:
                 value: "%info.json%"
     error:
       exec:
-        timeoutSec: 120
+        timeout: "2m"
         service: "node"
         commands:
           - prog: "node"
@@ -361,7 +361,7 @@ callbacks:
                 value: "%info.json%"
     sleep:
       exec:
-        timeoutSec: 120
+        timeout: "2m"
         service: "python3"
         commands:
           - prog: "python3"
@@ -375,7 +375,7 @@ callbacks:
     # token_check: verify the api_user token works server-side (ticket #79926)
     token_check:
       exec:
-        timeoutSec: 120
+        timeout: "2m"
         service: "node"
         commands:
           - prog: "node"
@@ -392,7 +392,7 @@ callbacks:
       plugin_user:
         base_config: "user.api_user"
       exec:
-        timeoutSec: 120
+        timeout: "2m"
         service: "node"
         commands:
           - prog: "node"
@@ -574,8 +574,6 @@ callbacks:
             - prog: python3
               stdin:
                 type: body
-              stderr:
-                type: body
               stdout:
                 type: body
               args:
@@ -588,8 +586,6 @@ callbacks:
             - prog: python3
               stdin:
                 type: body
-              stderr:
-                type: body
               stdout:
                 type: body
               args:
@@ -601,8 +597,6 @@ callbacks:
           commands:
             - prog: python3
               stdin:
-                type: body
-              stderr:
                 type: body
               stdout:
                 type: body
@@ -617,8 +611,6 @@ callbacks:
           commands:
             - prog: python3
               stdin:
-                type: body
-              stderr:
                 type: body
               stdout:
                 type: body
@@ -739,8 +731,6 @@ system_rights:
       - name: string-list-one-or-zero
         type: string-list-one-or-zero
         choices: [ a, b, c ]
-      - name: mask-select
-        type: mask-select
       - name: objecttype-select
         type: objecttype-select
       - name: eas-column-select
@@ -796,8 +786,7 @@ custom_types:
                 value: "%_exec.pluginDir%/customDataTypeUpdater/update.js"
               - type: "value"
                 value: "%info.json%"
-      timeout: 60
-      # Defaults to 100, will be set to maxium 100
+      # records per call, 1 to 1000; a larger or negative value becomes 100
       batch_size: 10
       # Defaults to 30
       expires_days: 1
