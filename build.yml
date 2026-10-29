@@ -58,6 +58,7 @@ webfrontend:
         - webfrontend/FylrExampleTransition.coffee
         - webfrontend/FylrExampleExportPluginSleep.coffee
         - webfrontend/FylrExampleSearchToolPlugin.coffee
+        - webfrontend/FylrExampleCollectionShareLinkPlugin.coffee
   # SCSS, compiled to same-named .css files
   scss:
     - webfrontend/FylrExampleScssDemo.scss
