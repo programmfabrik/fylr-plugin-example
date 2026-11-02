@@ -1,10 +1,10 @@
 # fylr-plugin-example
 
 The reference fylr plugin — it exercises most plugin features (api extensions,
-server callbacks, webfrontend, custom data type, base config, system rights,
-fas config, loca, a cross-compiled Go server extension) and shows **how fylr
-plugins are built and released**. fylr's apitests run against this plugin's
-latest release.
+server callbacks, background task modules, webfrontend, custom data type, base
+config, system rights, fas config, loca, a cross-compiled Go server extension)
+and shows **how fylr plugins are built and released**. fylr's apitests run
+against this plugin's latest release.
 
 ## Building
 
