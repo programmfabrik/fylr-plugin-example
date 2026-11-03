@@ -818,3 +818,148 @@ custom_events:
     user: true
   FYLR_EXAMPLE_EVENT:
     user: true
+
+# Background task modules, offered in the task manager as
+# "fylr_example.<name>". fylr writes {"info": {...}} to stdin (a module of kind
+# "search" also gets "objects", one page of the search) and reads stdout line
+# by line: each line is one JSON object, written to the task log as it
+# arrives. See server/tasks/.
+task_modules:
+  # kind "custom": the plugin does the work itself, through the API as the
+  # task owner (info.api_url, info.api_user_access_token)
+  - name: import_dummy
+    kind: custom
+    displayname:
+      de-DE: "Beispiel: Import aus einer Dummy-Quelle"
+      en-US: "Example: import from a dummy source"
+    description:
+      de-DE: Legt Objekte aus den Datensätzen einer Dummy-Quelle an. Jeder Lauf importiert die Datensätze nach dem zuletzt importierten.
+      en-US: Creates objects from the records of a dummy source. Each run imports the records after the last one imported.
+    params:
+      - name: objecttype
+        type: text
+        mandatory: true
+        displayname:
+          de-DE: Objekttyp
+          en-US: Objecttype
+      - name: field
+        type: text
+        mandatory: true
+        displayname:
+          de-DE: Feld für den Titel
+          en-US: Field for the title
+      - name: count
+        type: int
+        default: 3
+        displayname:
+          de-DE: Datensätze pro Lauf
+          en-US: Records per run
+      - name: delay
+        type: int
+        default: 0
+        displayname:
+          de-DE: Pause nach jedem Datensatz (Sekunden)
+          en-US: Pause after each record (seconds)
+    exec:
+      service: "python3"
+      commands:
+        - prog: "python3"
+          stdin:
+            type: "body"
+          stdout:
+            type: "body"
+          args:
+            - type: "value"
+              value: "%_exec.pluginDir%/server/tasks/import_dummy.py"
+    # optional: checks the params when a task is saved
+    check: &task_check
+      service: "python3"
+      commands:
+        - prog: "python3"
+          stdin:
+            type: "body"
+          stdout:
+            type: "body"
+          args:
+            - type: "value"
+              value: "%_exec.pluginDir%/server/tasks/check.py"
+
+  - name: export_search
+    kind: custom
+    displayname:
+      de-DE: "Beispiel: Suchergebnis exportieren"
+      en-US: "Example: export a search result"
+    description:
+      de-DE: Sendet die gefundenen Objekte an einen Endpunkt.
+      en-US: Posts the objects found to an endpoint.
+    params:
+      - name: search
+        type: json
+        plugin_type: search
+        mandatory: true
+        displayname:
+          de-DE: Suche
+          en-US: Search
+      - name: endpoint
+        type: text
+        mandatory: true
+        displayname:
+          de-DE: Endpunkt
+          en-US: Endpoint
+        description:
+          de-DE: URL, an die die Objekte gesendet werden. Ein Pfad mit "/" am Anfang ist ein Pfad der fylr-API.
+          en-US: URL the objects are posted to. A path starting with "/" is a path of the fylr API.
+    exec:
+      service: "python3"
+      commands:
+        - prog: "python3"
+          stdin:
+            type: "body"
+          stdout:
+            type: "body"
+          args:
+            - type: "value"
+              value: "%_exec.pluginDir%/server/tasks/export_search.py"
+    check: *task_check
+
+  # kind "search": fylr runs the search of the task (param "search", added by
+  # fylr) and calls the exec once per page. The plugin answers per object,
+  # fylr saves and sets the tags (params "set_unset_tags" and
+  # "set_unset_tags_on_error", added by fylr).
+  - name: set_field
+    kind: search
+    displayname:
+      de-DE: "Beispiel: Feld setzen"
+      en-US: "Example: set a field"
+    description:
+      de-DE: Setzt ein Feld der gefundenen Objekte auf einen Wert.
+      en-US: Sets a field of the objects found to a value.
+    params:
+      - name: field
+        type: text
+        mandatory: true
+        displayname:
+          de-DE: Feld
+          en-US: Field
+      - name: value
+        type: text
+        displayname:
+          de-DE: Wert
+          en-US: Value
+      - name: overwrite
+        type: bool
+        displayname:
+          de-DE: Vorhandene Werte überschreiben
+          en-US: Overwrite values
+    exec:
+      service: "python3"
+      commands:
+        - prog: "python3"
+          stdin:
+            type: "body"
+          stdout:
+            type: "body"
+          args:
+            - type: "value"
+              value: "%_exec.pluginDir%/server/tasks/set_field.py"
+    check: *task_check
