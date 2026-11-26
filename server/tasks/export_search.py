@@ -10,10 +10,14 @@ task = info["task"]
 params = task["params"]
 
 search = dict(params["search"])
-if search.pop("incremental", False) and task.get("last_run_at"):
-    search.setdefault("search", []).append(
-        {"type": "range", "field": "_last_modified", "from": task["last_run_at"]}
-    )
+if search.pop("incremental", False) and task.get("window_to"):
+    # the window of the run, as fylr's own modules take it: records modified
+    # from window_from (null before the first run which was done) to before
+    # window_to; a run which fails leaves the window for the next run
+    window = {"type": "range", "field": "_last_modified", "to": task["window_to"], "to_equals": False}
+    if task.get("window_from"):
+        window["from"] = task["window_from"]
+    search.setdefault("search", []).append(window)
 search["format"] = "long"
 search["limit"] = 100
 search["offset"] = 0
